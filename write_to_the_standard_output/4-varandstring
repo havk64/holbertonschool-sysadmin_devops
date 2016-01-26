@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "Hello, home directory is $PWD and my username is $USER"
+echo "Hello, home directory is $HOME and my username is $USER"
 
