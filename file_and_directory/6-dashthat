@@ -1,0 +1,5 @@
+#!/bin/bash
+touch ./-SF
+ 
+#we can also to do: 
+#$ touch -- '-SF' .
