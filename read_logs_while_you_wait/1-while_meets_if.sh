@@ -1,4 +1,8 @@
 #!/bin/bash
-while read line;do
-echo $line;
-done < $1 | grep HEAD;
+while read line
+do
+	if echo $line | grep -q "HEAD"
+	then
+		echo $line
+	fi
+done < $1;
