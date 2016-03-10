@@ -1,3 +1,3 @@
 #!/usr/bin/ruby
 firstArg = ARGV[0]
-puts firstArg.upcase
+puts firstArg.to_s.upcase
