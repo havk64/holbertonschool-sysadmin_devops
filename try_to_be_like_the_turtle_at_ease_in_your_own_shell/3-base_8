@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "%d\n" $(( $NUM1 + $NUM2 ))
+echo "obase=8; ibase=8;  $NUM1 + $NUM2 " | bc
