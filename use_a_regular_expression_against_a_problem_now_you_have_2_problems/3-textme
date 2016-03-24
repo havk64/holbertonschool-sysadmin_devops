@@ -1,0 +1,5 @@
+#!/usr/bin/ruby
+firstPar = ARGV[0]
+puts firstPar.scan(/\[from:\K[+\w]+|\[to:\K[+\w]+|\[flags:\K[-10:]+/).join(',')
+
+
