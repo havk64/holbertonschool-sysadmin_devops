@@ -1,2 +1,3 @@
 #!/bin/bash
-cat julien-passwd_file | awk -F ":" '{print $1}'| tr '[A-Za-z]' '[N-ZA-Mn-za-m]' | sort -k1.1,1.1 | tr '[N-ZA-Mn-za-m]' '[A-Za-z]'
+awk -F ":" '{print $1}' /etc/passwd | tr '[A-Za-z]' '[N-ZA-Mn-za-m]' | sort -k1.1,1.1 | tr '[N-ZA-Mn-za-m]' '[A-Za-z]'
+
