@@ -1,5 +1,5 @@
 #!/bin/bash
 
 FILE='/tmp/permissions'
-touch $FILE
-sudo chown :staff $FILE
+touch $FILE		# Creating the file.
+sudo chown :staff $FILE # Changing the group of the file.
