@@ -24,5 +24,3 @@ level3:x:1001:1001::/home/level3:/bin/bash
 privoxy:x:103:65534::/etc/privoxy:/bin/false
 debian-tor:x:104:106::/var/lib/tor:/bin/bash
 julien:x:1002:1000:Julien Barbier,402,,:/home/julien:/bin/bash
-
-
