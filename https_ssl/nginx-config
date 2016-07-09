@@ -1,0 +1,57 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+
+	root /home/deploy/CFSF/current/ ;
+	index index.html index.htm;
+
+	server_name havk64.tech www.havk64.tech;
+	return 301 https://$server_name$request_uri;
+
+	location / {
+		try_files $uri $uri/ =404;
+		ssi on;
+	}
+
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_index hostname.php;
+		include fastcgi_params;
+	}
+
+}
+
+server {
+	listen 443 ssl;
+	server_name havk64.tech www.havk64.tech;
+
+	root /home/deploy/CFSF/current/;
+	index index.html index.htm;
+
+	ssl on;
+
+#	Let's encrypt certificates:
+	ssl_certificate /etc/letsencrypt/live/havk64.tech/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/havk64.tech/privkey.pem;
+	ssl_session_timeout 180m;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+#	Optimizing the cipher suites:
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
+
+#	Generate DH parameters:
+	ssl_dhparam /etc/nginx/cert/dhparam.pem;
+
+#	Enable OCSP stapling:
+	ssl_stapling on;
+	ssl_stapling_verify on;
+
+#	Strict Transport Security:
+	add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload';
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
