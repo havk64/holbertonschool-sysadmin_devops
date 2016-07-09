@@ -59,3 +59,6 @@ server {
 		try_files $uri $uri/ =404;
 	}
 }
+
+#	In order to check the security of this url remotely try the following command(from any unix terminal):
+#	openssl s_client -connect havk64.tech:443 -tls1  -tlsextdebug  -status
