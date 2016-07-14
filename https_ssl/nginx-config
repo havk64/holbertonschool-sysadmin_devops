@@ -1,5 +1,5 @@
-#	
-# ===---------------------------------------------------------------------------------------===
+	
+# ===--------------------------------------------------------------------------------------===
 #	Nginx configuration file as part of HTTPS/SSL Project by Sylvain Kalache
 #	After this modifications my server got a A+ in SSL Labs.
 #	Check the result at the following address:
