@@ -1,27 +1,18 @@
-#	Http configuration:
+#	
+# ===---------------------------------------------------------------------------------------===
+#	Nginx configuration file as part of HTTPS/SSL Project by Sylvain Kalache
+#	After this modifications my server got a A+ in SSL Labs.
+#	Check the result at the following address:
+#	https://www.ssllabs.com/ssltest/analyze.html?d=havk64.tech
+#
+# ===--------------------------------------------------------------------------------------===
+
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server ipv6only=on;
-
-	root /home/deploy/CFSF/current/ ;
-	index index.html index.htm;
-
 	server_name havk64.tech www.havk64.tech;
 #	Redirect all http traffic(80) to https(443):
 	return 301 https://$server_name$request_uri;
-
-	location / {
-		try_files $uri $uri/ =404;
-		ssi on;
-	}
-
-	location ~ \.php$ {
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index hostname.php;
-		include fastcgi_params;
-	}
-
 }
 
 #	Https configuration:
