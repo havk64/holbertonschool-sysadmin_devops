@@ -1,10 +1,10 @@
 	
 # ===--------------------------------------------------------------------------------------===
 #	Nginx configuration file as part of HTTPS/SSL Project by Sylvain Kalache
-#	After this modifications my server got a A+ in SSL Labs.
+#
+#	Got an A+ in SSL Labs with this configuration
 #	Check the result at the following address:
 #	https://www.ssllabs.com/ssltest/analyze.html?d=havk64.tech
-#
 # ===--------------------------------------------------------------------------------------===
 
 server {
