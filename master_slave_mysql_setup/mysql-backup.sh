@@ -21,6 +21,7 @@ FILE=$(date +%d-%m-%Y).tar.gz
 NOW=$(date +"%a, %d %b %Y %T %z")	# $(date -R) on Linux works the same.
 TYPE='application/tar+gzip'
 STRING="PUT\n\n$TYPE\n$NOW\n/$BUCKET/$FILE"
+# Encrypting the AWS signature:
 SIGNATURE=$(echo -en "$STRING" | openssl sha1 -hmac "$SECRET" -binary | base64)
 PASSWD='xxx' 		# MySQL password
 
