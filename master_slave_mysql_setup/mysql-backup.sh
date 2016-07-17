@@ -47,8 +47,5 @@ curl -L -X PUT -T "$TPATH/$FILE" \
 	-H "Authorization: AWS $KEY:$SIGNATURE" \
 	https://"$HOST/$FILE"
 
-# Transfer the backupfile to AWS S3 Bucket:
-# Waiting AWS Educate account confirmation...
-
 # Remove the backup file locally:
 rm -f "$TPATH/$FILE"
