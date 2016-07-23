@@ -21,9 +21,10 @@ FILE=$(date +%d-%m-%Y).tar.gz
 NOW=$(date +"%a, %d %b %Y %T %z")	# $(date -R) on Linux works the same.
 TYPE='application/tar+gzip'
 STRING="PUT\n\n$TYPE\n$NOW\n/$BUCKET/$FILE"
+
 # Encrypting the AWS signature:
 SIGNATURE=$(echo -en "$STRING" | openssl sha1 -hmac "$SECRET" -binary | base64)
-PASSWD='xxx' 		# MySQL password
+PASSWD='xxx'		 		# MySQL password
 
 # Lock database and make it read only:
 mysql -u root -p$PASSWD --execute="FLUSH TABLES WITH READ LOCK; SET GLOBAL read_only = 1;"
