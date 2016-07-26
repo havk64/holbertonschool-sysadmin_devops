@@ -1,0 +1,16 @@
+source 'https://rubygems.org'
+
+gem 'berkshelf'
+
+group :development do
+  gem 'test-kitchen'
+  gem 'kitchen-docker'
+end
+
+site_cookbooks_path = File.expand_path('../cookbooks', __FILE__)
+
+Dir["#{site_cookbooks_path}/**"].each do |cookbook_path|
+  if File.directory?(cookbook_path)
+    eval File.read(File.join(cookbook_path, "Gemfile"))
+  end
+end
