@@ -1,4 +1,4 @@
-source "https://supermarket.chef.io"
+source 'https://supermarket.chef.io'
 
 site_cookbooks_path = File.expand_path('../cookbooks', __FILE__)
 
