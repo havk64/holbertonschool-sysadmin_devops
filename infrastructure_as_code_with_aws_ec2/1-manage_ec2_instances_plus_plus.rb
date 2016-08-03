@@ -15,7 +15,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate], "Select action to perform [launch, start, stop, terminate]") do |a|
+  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status], "Select action to perform [launch, start, stop, terminate]") do |a|
           args.action = a
   end
   opts.on("-i", "--instance_id=INSTANCE_ID", "ID of the instance to perform an action on") do |i|
@@ -81,7 +81,8 @@ when :terminate
 		})
 	pp response if args.verbose == true
 
-when :status
-	pp ec2.describe_instance_status({instance_ids: [args.instance_id]}) #.instance_statuses[0].instance_state.name
+when :status 
+	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
+	puts response.reservations[0].instances[0].state.name
 end
 
