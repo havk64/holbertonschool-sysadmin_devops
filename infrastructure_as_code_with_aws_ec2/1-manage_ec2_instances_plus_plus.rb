@@ -80,5 +80,8 @@ when :terminate
 		  instance_ids: [args.instance_id], 
 		})
 	pp response if args.verbose == true
+
+when :status
+	pp ec2.describe_instance_status({instance_ids: [args.instance_id]}) #.instance_statuses[0].instance_state.name
 end
 
