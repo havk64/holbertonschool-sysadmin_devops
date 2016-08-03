@@ -33,7 +33,7 @@ parser = OptionParser.new do |opts|
   end
 end
 
-parser.parse!
+parser.parse! %w[--help]
 
 creds = YAML.load_file('config.yaml')
 
