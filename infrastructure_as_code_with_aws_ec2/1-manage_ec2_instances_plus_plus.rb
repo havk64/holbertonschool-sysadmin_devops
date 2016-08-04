@@ -15,7 +15,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status], "Select action to perform [launch, start, stop, terminate]") do |a|
+  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status, :change_name], "Select action to perform [launch, start, stop, terminate]") do |a|
           args.action = a
   end
   opts.on("-i", "--instance_id=INSTANCE_ID", "ID of the instance to perform an action on") do |i|
@@ -27,20 +27,18 @@ parser = OptionParser.new do |opts|
   opts.on("-s", "--status", "Status of an instance") do |s|
 	  args.status = s
   end
-  opts.on("-h", "--help", "Prints this help") do |h|
+  opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
   end
 end
 
-parser.parse! %w[--help]
+parser.parse! #%w[--help]
 
 creds = YAML.load_file('config.yaml')
 
 ec2 = Aws::EC2::Client.new({
-		region: 		creds['availability-zone'],
-		access_key_id: 		creds['access_key_id'],
-		secret_access_key: 	creds['secret_access_key']
+		region:	'us-west-2'
 })
 
 case args.action
@@ -84,5 +82,8 @@ when :terminate
 when :status 
 	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
 	puts response.reservations[0].instances[0].state.name
+
+when :change_name
+	args.name
 end
 
