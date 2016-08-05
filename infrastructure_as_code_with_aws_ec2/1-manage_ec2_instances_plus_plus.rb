@@ -102,6 +102,7 @@ when :status
 	puts response.reservations[0].instances[0].state.name
 
 when :change_name
-	args.name
+	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
+
 end
 
