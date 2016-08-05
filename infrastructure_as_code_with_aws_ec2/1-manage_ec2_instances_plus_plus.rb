@@ -34,16 +34,14 @@ parser = OptionParser.new do |opts|
   end
 end
 
-parser.parse! #%w[--help]
+parser.parse!
 
 creds = YAML.load_file('config.yaml')
 Aws.config.update({
 	:logger => Logger.new($stdout)
 }) if args.verbose == true
 
-ec2 = Aws::EC2::Client.new({
-		region:	'us-west-2'
-})
+ec2 = Aws::EC2::Client.new(region: 'us-west-2')
 
 case args.action
 when :launch
@@ -60,7 +58,13 @@ when :launch
 	})
 		id = instance.instances[0].instance_id
 		response = ec2.wait_until(:instance_running, instance_ids:[id])
-		puts id + "," + response.reservations[0].instances[0].public_dns_name
+		if args.verbose == true
+			puts "Created instance id => " + id
+			puts "Public DNS Name => " + response.reservations[0].instances[0].public_dns_name
+			puts "Public IP Address => " +  response.reservations[0].instances[0].public_ip_address
+		else
+			puts id + "," + response.reservations[0].instances[0].public_dns_name
+		end
 
 when :stop
 	response = ec2.stop_instances({
