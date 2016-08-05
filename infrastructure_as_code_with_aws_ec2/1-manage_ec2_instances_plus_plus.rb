@@ -67,9 +67,11 @@ when :stop
 		  instance_ids: [args.instance_id],
 		  force: false,
 	})
-	puts "Stopping instance => " + args.instance_id
-	puts "Current state     => " + response.stopping_instances[0].current_state.name
-	puts "Previous state    => " + response.stopping_instances[0].previous_state.name
+	if args.verbose == true
+		puts "Stopping instance => " + args.instance_id
+		puts "Current state     => " + response.stopping_instances[0].current_state.name
+		puts "Previous state    => " + response.stopping_instances[0].previous_state.name
+	end
 
 when :start
 	response = ec2.start_instances({
@@ -90,9 +92,9 @@ when :terminate
 		})
 
 	if args.verbose == true
-	puts "Terminating instance id: " + args.instance_id
-	puts "Current state: " + response.terminating_instances[0].current_state.name
-	puts "Previous state: " + response.terminating_instances[0].previous_state.name
+		puts "Terminating instance id: " + args.instance_id
+		puts "Current state: " + response.terminating_instances[0].current_state.name
+		puts "Previous state: " + response.terminating_instances[0].previous_state.name
 	end
 
 when :status 
