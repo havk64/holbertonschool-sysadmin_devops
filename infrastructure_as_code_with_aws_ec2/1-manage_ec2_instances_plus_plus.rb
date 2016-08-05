@@ -4,6 +4,7 @@ require 'optparse'
 require 'aws-sdk'
 require 'yaml'
 require 'pp'
+require 'logger'
 
 
 Options = Struct.new(:action, :name, :instance_id, :status, :verbose)
@@ -36,6 +37,9 @@ end
 parser.parse! #%w[--help]
 
 creds = YAML.load_file('config.yaml')
+Aws.config.update({
+	:logger => Logger.new($stdout)
+}) if args.verbose == true
 
 ec2 = Aws::EC2::Client.new({
 		region:	'us-west-2'
@@ -56,28 +60,40 @@ when :launch
 	})
 		id = instance.instances[0].instance_id
 		response = ec2.wait_until(:instance_running, instance_ids:[id])
-		puts id, response.reservations[0].instances[0].public_dns_name
+		puts id + "," + response.reservations[0].instances[0].public_dns_name
 
 when :stop
 	response = ec2.stop_instances({
 		  instance_ids: [args.instance_id],
 		  force: false,
 	})
-	pp response if args.verbose == true
+	puts "Stopping instance => " + args.instance_id
+	puts "Current state     => " + response.stopping_instances[0].current_state.name
+	puts "Previous state    => " + response.stopping_instances[0].previous_state.name
 
 when :start
 	response = ec2.start_instances({
 		  instance_ids: [args.instance_id], 
 		})
 	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
-	puts response.reservations[0].instances[0].public_dns_name
-	pp response if args.verbose == true
+	if args.verbose == true
+		puts "Public DNS name   => " + response.reservations[0].instances[0].public_dns_name
+		puts "Current state     => " + response.reservations[0].instances[0].state.name
+		puts "Public IP Address => " + response.reservations[0].instances[0].public_ip_address
+	else
+		puts response.reservations[0].instances[0].public_dns_name
+	end
 	
 when :terminate
 	response = ec2.terminate_instances({
 		  instance_ids: [args.instance_id], 
 		})
-	pp response if args.verbose == true
+
+	if args.verbose == true
+	puts "Terminating instance id: " + args.instance_id
+	puts "Current state: " + response.terminating_instances[0].current_state.name
+	puts "Previous state: " + response.terminating_instances[0].previous_state.name
+	end
 
 when :status 
 	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
