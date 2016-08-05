@@ -21,7 +21,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on("-h", "--help", "Prints this help") do |h|
+  opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
   end
@@ -31,15 +31,11 @@ parser.parse!
 
 creds = YAML.load_file('config.yaml')
 
-ec2 = Aws::EC2::Client.new({
-		region: 		creds['availability-zone'],
-		access_key_id: 		creds['access_key_id'],
-		secret_access_key: 	creds['secret_access_key']
-})
+ec2 = Aws::EC2::Resource.new(region: 'us-west-2')
 
 case args.action
 when :launch
-	instance = ec2.run_instances({
+	instance = ec2.create_instances({
 		image_id:		creds['image_id'],
 		min_count: 		1,
 		max_count:		1,
@@ -50,16 +46,18 @@ when :launch
 			availability_zone: creds['availability-zone']
 		}
 	})
-		id = instance.instances[0].instance_id
-		response = ec2.wait_until(:instance_running, instance_ids:[id])
-		puts id, response.reservations[0].instances[0].public_dns_name
+		id = instance[0].id
+		response = ec2.client.wait_until(:instance_running, instance_ids:[id])
+		puts id + "," + response.reservations[0].instances[0].public_dns_name
+		puts "The whole response Object: "
+		pp response.to_h if args.verbose == true
 
 when :stop
 	response = ec2.stop_instances({
 		  instance_ids: [args.instance_id],
 		  force: false,
 	})
-	pp response if args.verbose == true
+	pp response.to_h if args.verbose == true
 
 when :start
 	response = ec2.start_instances({
@@ -67,14 +65,11 @@ when :start
 		})
 	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
 	puts response.reservations[0].instances[0].public_dns_name
-	pp response if args.verbose == true
+	pp response.to_h if args.verbose == true
 	
 when :terminate
 	response = ec2.terminate_instances({
 		  instance_ids: [args.instance_id], 
 		})
-	pp response if args.verbose == true
+	pp response.to_h if args.verbose == true
 end
-
-
-
