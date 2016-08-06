@@ -16,7 +16,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status, :change_name], "Select action to perform [launch, start, stop, terminate]") do |a|
+  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status, :change_name, :list], "Select action to perform [launch, start, stop, terminate]") do |a|
           args.action = a
   end
   opts.on("-i", "--instance_id=INSTANCE_ID", "ID of the instance to perform an action on") do |i|
@@ -108,5 +108,7 @@ when :status
 when :change_name
 	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
 
+when :list
+	puts ec2.describe_instances.instances.to_yaml 
 end
 
