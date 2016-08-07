@@ -22,16 +22,18 @@ parser = OptionParser.new do |opts|
   opts.on("-i", "--instance_id=INSTANCE_ID", "ID of the instance to perform an action on") do |i|
 	  args.instance_id = i
   end
-  opts.on("-n", "--name=NAME", "Change the name of an instance") do |n|
+  opts.on("-n", "--name=INSTANCE_NAME", "Change the name of an instance") do |n|
 	  args.name = n
   end
   opts.on("-s", "--status", "Status of an instance") do |s|
 	  args.status = s
   end
-  opts.on("-h", "--help", "Prints this help") do
-    puts opts
-    exit
-  end
+  # Not in requirements but seems to be a good option:
+  #
+  # opts.on("-h", "--help", "Prints this help") do
+  #   puts opts
+  #   exit
+  # end
 end
 
 parser.parse!
@@ -124,3 +126,5 @@ when :list
 	end
 end
 
+# Prints the help message if no argument is given.
+puts parser.help if ARGV.empty?
