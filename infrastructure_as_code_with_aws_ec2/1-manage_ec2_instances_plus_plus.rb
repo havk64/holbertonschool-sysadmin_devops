@@ -38,13 +38,21 @@ end
 
 parser.parse!
 
+# Prints the help message if no argument is given.
+unless !ARGV.empty?
+	puts parser.help if ARGV.empty?
+	exit 1
+end
+
+# Read the configuration file:
 creds = YAML.load_file('config.yaml')
+# Add logger if verbosity is set to true
 Aws.config.update({
 	:logger => Logger.new($stdout)
 }) if args.verbose == true
-
+# New AWS Client
 ec2 = Aws::EC2::Client.new(region: 'us-west-2')
-
+# Parse the action to be taken
 case args.action
 when :launch
 	instance = ec2.run_instances({
@@ -126,5 +134,3 @@ when :list
 	end
 end
 
-# Prints the help message if no argument is given.
-puts parser.help if ARGV.empty?
