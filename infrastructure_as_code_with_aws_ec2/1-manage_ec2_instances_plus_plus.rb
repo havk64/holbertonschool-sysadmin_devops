@@ -111,13 +111,15 @@ when :change_name
 when :list
 	ec2.describe_instances.reservations.each do |item|
 		item.instances.each do |i|
-			puts "===----------------------------------------------------------==="
-			puts "Instance id: " + i[:instance_id] 
-			puts "Current status: " + i[:state][:name]
-			puts "Private DNS Name: " + i[:private_dns_name]
-			puts "Instance type: " + i[:instance_type]
-			puts "Private IP Address: " + i[:private_ip_address]
-			puts "===----------------------------------------------------------==="
+			puts "===----------------------------------------------------------------------==="
+			puts "%-20s => %s" % ["Current status",		i[:state][:name]]
+			puts "%-20s => %s" % ["Instance id",		i[:instance_id]]
+			puts "%-20s => %s" % ["Public DNS Name",	((i[:public_dns_name].empty?) ? "Not running" : i[:public_dns_name])]
+			puts "%-20s => %s" % ["Private DNS Name",	i[:private_dns_name]]
+			puts "%-20s => %s" % ["Instance type",		i[:instance_type]]
+			puts "%-20s => %s" % ["Public IP Address",	((i[:public_ip_address].nil?) ? "Not running" : i[:public_ip_address])]
+			puts "%-20s => %s" % ["Private IP Address",	i[:private_ip_address]]
+			puts "===----------------------------------------------------------------------==="
 		end
 	end
 end
