@@ -6,8 +6,9 @@ require 'yaml'
 require 'pp'
 require 'logger'
 
-Options = Struct.new(:action, :name, :instance_id, :status, :verbose)
+Options = Struct.new(:action, :name, :instance_id, :status, :verbose, :empty)
 args = Options.new()
+args.empty = ARGV.empty?
 
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: aws_script.rb [options]"
@@ -35,7 +36,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on_tail("--version", "Show version") do
+  opts.on("--version", "Show version") do
 	  puts ::Version.join('.')
 	  exit
   end
@@ -57,8 +58,8 @@ rescue OptionParser::InvalidArgument => error
 end
 
 # Prints the help message if no argument is given.
-unless !ARGV.empty?
-	puts parser.help if ARGV.empty?
+unless !args.empty
+	puts parser.help
 	exit 1
 end
 
@@ -140,8 +141,8 @@ when :list
 	ec2.describe_instances.reservations.each do |item|
 		item.instances.each do |i|
 			puts "===----------------------------------------------------------------------==="
-			puts "%-20s => %s" % ["Current status",		i[:state][:name]]
 			puts "%-20s => %s" % ["Instance id",		i[:instance_id]]
+			puts "%-20s => %s" % ["Current status",		i[:state][:name]]
 			puts "%-20s => %s" % ["Public DNS Name",	((i[:public_dns_name].empty?) ? "Not running" : i[:public_dns_name])]
 			puts "%-20s => %s" % ["Private DNS Name",	i[:private_dns_name]]
 			puts "%-20s => %s" % ["Instance type",		i[:instance_type]]
