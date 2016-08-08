@@ -3,7 +3,6 @@
 require 'optparse'
 require 'aws-sdk'
 require 'yaml'
-require 'pp'
 require 'logger'
 
 Options = Struct.new(:action, :name, :instance_id, :status, :verbose, :empty)
