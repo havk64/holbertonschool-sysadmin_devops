@@ -6,7 +6,6 @@ require 'yaml'
 require 'pp'
 require 'logger'
 
-
 Options = Struct.new(:action, :name, :instance_id, :status, :verbose)
 args = Options.new()
 
@@ -41,8 +40,21 @@ parser = OptionParser.new do |opts|
 	  exit
   end
 end
-
-parser.parse!
+# Evaluate the options and deal with errors gently:
+begin
+	parser.parse!
+rescue OptionParser::InvalidArgument => error
+	puts "Error => " + error.to_s
+	puts "Valid action arguments are:"
+	puts "%4s%-33s%-20s" % ["", "-a launch", "Creates a new server"]
+	puts "%4s%-33s%-20s" % ["", "-a start", "Starts a server"]
+	puts "%4s%-33s%-20s" % ["", "-a stop", "Stops a server"]
+	puts "%4s%-33s%-20s" % ["", "-a terminate", "Terminates a server"]
+	puts "%4s%-33s%-20s" % ["", "-a status", "Returns the status of an instance"]
+	puts "%4s%-33s%-20s" % ["", "-a change_name", "Change the name of an instance"]
+	puts "%4s%-33s%-20s" % ["", "-a list", "List all instances"]
+	puts ""
+end
 
 # Prints the help message if no argument is given.
 unless !ARGV.empty?
