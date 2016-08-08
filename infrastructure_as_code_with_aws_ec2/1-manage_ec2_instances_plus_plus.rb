@@ -118,19 +118,5 @@ when :status
 when :change_name
 	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
 
-when :list
-	ec2.describe_instances.reservations.each do |item|
-		item.instances.each do |i|
-			puts "===----------------------------------------------------------------------==="
-			puts "%-20s => %s" % ["Current status",		i[:state][:name]]
-			puts "%-20s => %s" % ["Instance id",		i[:instance_id]]
-			puts "%-20s => %s" % ["Public DNS Name",	((i[:public_dns_name].empty?) ? "Not running" : i[:public_dns_name])]
-			puts "%-20s => %s" % ["Private DNS Name",	i[:private_dns_name]]
-			puts "%-20s => %s" % ["Instance type",		i[:instance_type]]
-			puts "%-20s => %s" % ["Public IP Address",	((i[:public_ip_address].nil?) ? "Not running" : i[:public_ip_address])]
-			puts "%-20s => %s" % ["Private IP Address",	i[:private_ip_address]]
-			puts "===----------------------------------------------------------------------==="
-		end
-	end
 end
 
