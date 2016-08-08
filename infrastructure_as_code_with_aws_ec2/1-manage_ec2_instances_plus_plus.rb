@@ -6,9 +6,9 @@ require 'yaml'
 require 'pp'
 require 'logger'
 
-
-Options = Struct.new(:action, :name, :instance_id, :status, :verbose)
+Options = Struct.new(:action, :name, :instance_id, :status, :verbose, :empty)
 args = Options.new()
+args.empty = ARGV.empty?
 
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: aws_script.rb [options]"
@@ -16,7 +16,7 @@ parser = OptionParser.new do |opts|
   opts.on("-v", "--verbose", "Run verbosely") do |b|
 	  args.verbose = b
   end
-  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status, :change_name, :list], "Select action to perform [launch, start, stop, terminate, status, change_name, list]") do |a|
+  opts.on("-a", "--action=ACTION", [:launch, :stop, :start, :terminate, :status, :change_name], "Select action to perform [launch, start, stop, terminate, status, change_name]") do |a|
           args.action = a
   end
   opts.on("-i", "--instance_id=INSTANCE_ID", "ID of the instance to perform an action on") do |i|
@@ -37,10 +37,9 @@ parser = OptionParser.new do |opts|
 end
 
 parser.parse!
-
 # Prints the help message if no argument is given.
-unless !ARGV.empty?
-	puts parser.help if ARGV.empty?
+unless !args.empty
+	puts parser.help
 	exit 1
 end
 
