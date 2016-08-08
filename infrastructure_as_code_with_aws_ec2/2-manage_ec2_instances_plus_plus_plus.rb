@@ -46,13 +46,13 @@ begin
 rescue OptionParser::InvalidArgument => error
 	puts "Error => " + error.to_s
 	puts "Valid action arguments are:"
-	puts "%4s%-33s%-20s" % ["", "-a launch", "Creates a new server"]
-	puts "%4s%-33s%-20s" % ["", "-a start", "Starts a server"]
-	puts "%4s%-33s%-20s" % ["", "-a stop", "Stops a server"]
-	puts "%4s%-33s%-20s" % ["", "-a terminate", "Terminates a server"]
-	puts "%4s%-33s%-20s" % ["", "-a status", "Returns the status of an instance"]
-	puts "%4s%-33s%-20s" % ["", "-a change_name", "Change the name of an instance"]
-	puts "%4s%-33s%-20s" % ["", "-a list", "List all instances"]
+	puts "%4s%-33s%-20s" % ["", "-a launch",	"Creates a new server"]
+	puts "%4s%-33s%-20s" % ["", "-a start",		"Starts a server"]
+	puts "%4s%-33s%-20s" % ["", "-a stop",		"Stops a server"]
+	puts "%4s%-33s%-20s" % ["", "-a terminate",	"Terminates a server"]
+	puts "%4s%-33s%-20s" % ["", "-a status",	"Returns the status of an instance"]
+	puts "%4s%-33s%-20s" % ["", "-a change_name",	"Change the name of an instance"]
+	puts "%4s%-33s%-20s" % ["", "-a list",		"List all instances"]
 	puts ""
 end
 
