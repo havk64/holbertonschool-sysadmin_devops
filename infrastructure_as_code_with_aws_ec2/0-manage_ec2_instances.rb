@@ -32,12 +32,14 @@ unless !args.empty
 	exit 1
 end
 creds = YAML.load_file('config.yaml')
+# Configuration, credentials:
 Aws.config.update({
 	region: creds['availability-zone'],
 	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
 })
+# Instantiating:
 ec2 = Aws::EC2::Resource.new()
-
+# Switch case:
 case args.action
 when :launch
 	instance = ec2.create_instances({
@@ -77,19 +79,5 @@ when :terminate
 		})
 	pp response.to_h if args.verbose == true
 
-when :list
-	resp = ec2.instances.inject({}) { |m, i| m[i.id] = i.state; m }
-	puts resp.to_yaml
-	ec2.instances.each do |i|
-		puts i.public_dns_name
-		puts i
-		#puts "Instance id: " + i.methods
-	end
-	ec2.instances[0].each do |i|
-		puts i.inspect
-	end
-
-	puts "===================================="
-	puts ec2.inspect
 end
 
