@@ -10,6 +10,7 @@ args = Options.new()
 args.empty = ARGV.empty?
 
 parser = OptionParser.new do |opts|
+  Version = '0.1.0a'
   opts.banner = "Usage: aws_script.rb [options]"
   opts.separator ""
   opts.separator "Specific options:"
@@ -36,7 +37,7 @@ parser = OptionParser.new do |opts|
 	  args.verbose = b
   end
   opts.on("--version", "Show version") do
-	  puts ::Version.join('.')
+	  puts ::Version
 	  exit
   end
 end
