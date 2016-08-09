@@ -110,8 +110,14 @@ when :terminate
 		puts "Previous state: " + response.terminating_instances[0].previous_state.name
 	end
 
-when :status 
-	puts ec2.describe_instances(instance_ids: [args.instance_id]).reservations[0].instances[0].state.name
+when :status
+	status = ec2.describe_instances(instance_ids: [args.instance_id]).reservations[0].instances[0].state.name
+	if args.verbose == true
+		puts "Instance id => " + args.instance_id
+		puts "Current status => " +  status
+	else
+		puts status 
+	end
 
 when :change_name
 	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
