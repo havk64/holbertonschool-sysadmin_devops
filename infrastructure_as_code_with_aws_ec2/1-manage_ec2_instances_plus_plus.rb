@@ -50,7 +50,10 @@ Aws.config.update({
 	:logger => Logger.new($stdout)
 }) if args.verbose == true
 # New AWS Client
-ec2 = Aws::EC2::Client.new(region: 'us-west-2')
+ec2 = Aws::EC2::Client.new({
+	region: creds['availability-zone'],
+	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
+})
 # Parse the action to be taken
 case args.action
 when :launch
@@ -61,9 +64,6 @@ when :launch
 		key_name:		creds['key_pair'],
 		security_group_ids:	creds['security_group_ids'],
 		instance_type:		creds['instance_type'],
-		placement: {
-			availability_zone: creds['availability-zone']
-		}
 	})
 		id = instance.instances[0].instance_id
 		response = ec2.wait_until(:instance_running, instance_ids:[id])
