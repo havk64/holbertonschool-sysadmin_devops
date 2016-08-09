@@ -120,7 +120,10 @@ when :status
 	end
 
 when :change_name
-	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
+	ec2.create_tags(
+		:resources => [args.instance_id],
+		:tags => [:key => "Name", :value => args.name]
+	)
 
 end
 
