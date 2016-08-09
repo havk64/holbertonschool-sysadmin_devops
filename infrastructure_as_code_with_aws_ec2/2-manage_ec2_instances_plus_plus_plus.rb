@@ -130,11 +130,19 @@ when :terminate
 	end
 
 when :status 
-	response = ec2.wait_until(:instance_running, instance_ids:[args.instance_id])
-	puts response.reservations[0].instances[0].state.name
+	status = ec2.describe_instances(instance_ids: [args.instance_id]).reservations[0].instances[0].state.name
+	if args.verbose == true
+		puts "Instance id => " + args.instance_id
+		puts "Current status => " +  status
+	else
+		puts status 
+	end
 
 when :change_name
-	ec2.create_tags(:resources => [args.instance_id], :tags => [:key => "Name", :value => args.name])
+	ec2.create_tags(
+		:resources => [args.instance_id],
+		:tags => [:key => "Name", :value => args.name]
+	)
 
 when :list
 	ec2.describe_instances.reservations.each do |item|
