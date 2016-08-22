@@ -3,6 +3,7 @@
 require "optparse"
 require "aws-sdk"
 require "yaml"
+require "logger"
 
 
 Options = Struct.new(:action,:name, :verbose, :empty, :path)
@@ -38,4 +39,22 @@ unless !args.empty
 	exit 1
 end
 
+# Loading credentials file(yaml format)
+creds = YAML.load_file('config.yaml')
+# Add logger when verbosity is set to true
+Aws.config.update({
+	:logger => Logger.new($stdout)
+}) if args.verbose == true
+# Client constructors with credentials.
+s3 = Aws::S3::Client.new(
+	region: creds['region'],
+	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
+)
 
+case args.action
+when :list
+	resp = s3.list_objects({ bucket: args.name })
+	resp.contents.each do |obj|
+		puts "#{obj.key} => #{obj.etag}"
+	end
+end
