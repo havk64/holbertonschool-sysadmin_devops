@@ -50,12 +50,17 @@ s3 = Aws::S3::Client.new(
 	region: creds['region'],
 	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
 )
-
+# Parse the action to be taken
 case args.action
 when :list
-	resp = s3.list_objects({ bucket: args.name })
-	resp.contents.each do |obj|
-		puts "#{obj.key} => #{obj.etag}"
+	unless args.name.nil?
+		resp = s3.list_objects({ bucket: args.name })
+		resp.contents.each do |obj|
+			puts "#{obj.key} => #{obj.etag}"
+		end
+	else
+		resp = s3.list_buckets
+		puts resp.buckets.map(&:name)
 	end
 
 when :upload
