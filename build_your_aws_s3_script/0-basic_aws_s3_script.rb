@@ -57,4 +57,13 @@ when :list
 	resp.contents.each do |obj|
 		puts "#{obj.key} => #{obj.etag}"
 	end
+
+when :upload
+	filename = File.basename(args.path)
+	File.open(args.path, 'r') do |file|
+		resp = s3.put_object(bucket: args.name, key: filename, body: args.path)
+		puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
+	end
+
 end
+
