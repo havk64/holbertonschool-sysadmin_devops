@@ -90,9 +90,10 @@ when :download
 when :size
 	total = 0.0
 	resp = s3.list_objects({ bucket: args.name })
-		resp.contents.each do |obj|
-			total += obj.size
-		end
-		puts "%.2fM0" % [total/1024]
+	resp.contents.each do |obj|
+		total += obj.size
+	end
+	result = "%.2fMo" % [total/1024]
+	puts !args.verbose ? result : "The total size of the bucket \"#{args.name}\" is #{result}"
 end
 
