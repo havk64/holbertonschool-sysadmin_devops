@@ -54,7 +54,15 @@ s3 = Aws::S3::Client.new(
 case args.action
 when :list
 	unless args.name.nil?
-		resp = s3.list_objects({ bucket: args.name })
+		begin
+			resp = s3.list_objects({ bucket: args.name })
+		rescue Aws::S3::Errors::NoSuchBucket => err
+			puts "#{err}!" 
+			puts "Valid buckets currently are: "
+			resp = s3.list_buckets
+			puts resp.buckets.map(&:name)
+			exit
+		end
 		resp.contents.each do |obj|
 			puts "#{obj.key} => #{obj.etag}"
 		end
@@ -94,6 +102,7 @@ when :size
 		total += obj.size
 	end
 	result = "%.2fMo" % [total/1024]
+	# Case verbosity is requested prints the second entry that is more descriptive
 	puts !args.verbose ? result : "The total size of the bucket \"#{args.name}\" is #{result}"
 end
 
