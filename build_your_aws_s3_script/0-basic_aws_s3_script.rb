@@ -71,7 +71,16 @@ when :delete
 		bucket: args.name,
 		key: filename
 	})
-	puts "File #{filename} deleted with success!" if args.verbose == true
-		
+	puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
+
+when :download
+	filename = File.basename(args.path)
+	resp = s3.get_object({
+		bucket: args.name,
+		response_target: args.path,
+		key: filename
+	})
+	puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
+
 end
 
