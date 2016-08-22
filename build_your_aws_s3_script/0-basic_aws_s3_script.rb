@@ -62,8 +62,16 @@ when :upload
 	filename = File.basename(args.path)
 	File.open(args.path, 'r') do |file|
 		resp = s3.put_object(bucket: args.name, key: filename, body: args.path)
-		puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 	end
+	puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 
+when :delete
+	filename = File.basename(args.path)
+	resp = s3.delete_object({
+		bucket: args.name,
+		key: filename
+	})
+	puts "File #{filename} deleted with success!" if args.verbose == true
+		
 end
 
