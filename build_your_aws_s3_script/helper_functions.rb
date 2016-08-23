@@ -32,7 +32,7 @@ def checkFile(bucket, file, client)
 	rescue Aws::S3::Errors::NoSuchKey => err
 		puts err
 		resp = client.list_objects({ bucket: bucket })
-		puts "The current list of available files are: "
+		puts "Valid files currently are: "
 		resp.contents.each do |obj|
 			puts "=> #{obj.key}"
 		end
