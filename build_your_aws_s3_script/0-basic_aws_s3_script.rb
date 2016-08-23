@@ -76,7 +76,7 @@ when :delete
 		bucket: args.name,
 		key: filename
 	})
-	puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
+	puts "File #{filename} deleted with success!" if args.verbose == true
 
 when :download
 	filename = File.basename(args.path)
