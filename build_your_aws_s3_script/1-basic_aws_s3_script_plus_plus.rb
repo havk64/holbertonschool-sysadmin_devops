@@ -117,9 +117,8 @@ when :download
 	puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
 
 when :size
-	checkBucket(args.name, s3)
 	total = 0.0
-	resp = s3.list_objects({ bucket: args.name })
+	resp = checkBucket(args.name, s3)
 	resp.contents.each do |obj|
 		total += obj.size
 	end
