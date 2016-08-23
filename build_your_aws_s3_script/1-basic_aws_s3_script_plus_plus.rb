@@ -60,21 +60,22 @@ def checkBucket(bucket, client)
 	rescue Aws::S3::Errors::NoSuchBucket => err
 		# Catching errors case name informed is wrong
 		puts "#{err}!" 
+		resp = client.list_buckets
 		# Informe current buckets
 		puts "Valid buckets currently are: "
-		resp = client.list_buckets
 		resp.buckets.map(&:name).each do |item|
 			puts "=> #{item}"
 		end
 		exit
 	end
+	return resp
 end
 
 # Parse the action to be taken
 case args.action
 when :list
 	unless args.name.nil? # case the bucket name is informed prints list of objects on this bucker
-		checkBucket(args.name, s3)
+		resp = checkBucket(args.name, s3)
 		resp.contents.each do |obj|
 			puts "#{obj.key} => #{obj.etag}"
 		end
@@ -94,16 +95,16 @@ when :upload
 when :delete
 	filename = File.basename(args.path)
 	checkBucket(args.name, s3)
-	begin
-		resp = s3.delete_object({
-			bucket: args.name,
-			key: filename
-		})
-	rescue Aws::S3::Errors::NoSuchBucket => err
-		puts "#{err}!"  
-		exit
-	end
-	puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
+	# begin
+	 	resp = s3.delete_object({
+	 		bucket: args.name,
+	 		key: filename
+	 	})
+	# rescue Aws::S3::Errors::NoSuchBucket => err
+	# 	puts "#{err}!"  
+	# 	exit
+	# end
+	#puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
 
 when :download
 	filename = File.basename(args.path)
