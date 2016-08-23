@@ -22,7 +22,7 @@ parser = OptionParser.new do |opts|
   opts.on("-f", "--filepath=FILE_PATH", "Path to the file to upload") do |f|
 	  args.path = f
   end
-  opts.on("-a", "--action=ACTION", [:list, :upload, :delete, :download, :size], "Select action to perform [list, upload, delete, download]") do |a|
+  opts.on("-a", "--action=ACTION", [:list, :upload, :delete, :download, :size], "Select action to perform [list, upload, delete, download, size]") do |a|
 	  args.action = a
   end
   opts.on("-h", "--help", "Returns the help menu") do
