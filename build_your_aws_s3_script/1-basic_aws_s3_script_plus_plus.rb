@@ -50,23 +50,36 @@ s3 = Aws::S3::Client.new(
 	region: creds['region'],
 	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
 )
+
+# === CheckBucket function
+# Verify if bucket name is correct
+# Case not it prints the list of buckets and exit
+def checkBucket(bucket, client)
+	begin
+		resp = client.list_objects({ bucket: bucket })
+	rescue Aws::S3::Errors::NoSuchBucket => err
+		# Catching errors case name informed is wrong
+		puts "#{err}!" 
+		# Informe current buckets
+		puts "Valid buckets currently are: "
+		resp = client.list_buckets
+		resp.buckets.map(&:name).each do |item|
+			puts "=> #{item}"
+		end
+		exit
+	end
+end
+
 # Parse the action to be taken
 case args.action
 when :list
-	unless args.name.nil?
-		begin
-			resp = s3.list_objects({ bucket: args.name })
-		rescue Aws::S3::Errors::NoSuchBucket => err
-			puts "#{err}!" 
-			puts "Valid buckets currently are: "
-			resp = s3.list_buckets
-			puts resp.buckets.map(&:name)
-			exit
-		end
+	unless args.name.nil? # case the bucket name is informed prints list of objects on this bucker
+		checkBucket(args.name, s3)
 		resp.contents.each do |obj|
 			puts "#{obj.key} => #{obj.etag}"
 		end
 	else
+		# case bucket name isn't informed just list all buckets
 		resp = s3.list_buckets
 		puts resp.buckets.map(&:name)
 	end
@@ -80,14 +93,21 @@ when :upload
 
 when :delete
 	filename = File.basename(args.path)
-	resp = s3.delete_object({
-		bucket: args.name,
-		key: filename
-	})
+	checkBucket(args.name, s3)
+	begin
+		resp = s3.delete_object({
+			bucket: args.name,
+			key: filename
+		})
+	rescue Aws::S3::Errors::NoSuchBucket => err
+		puts "#{err}!"  
+		exit
+	end
 	puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
 
 when :download
 	filename = File.basename(args.path)
+	checkBucket(args.name, s3)
 	resp = s3.get_object({
 		bucket: args.name,
 		response_target: args.path,
@@ -96,6 +116,7 @@ when :download
 	puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
 
 when :size
+	checkBucket(args.name, s3)
 	total = 0.0
 	resp = s3.list_objects({ bucket: args.name })
 	resp.contents.each do |obj|
