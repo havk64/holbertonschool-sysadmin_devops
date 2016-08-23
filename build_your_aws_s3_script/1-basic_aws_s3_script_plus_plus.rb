@@ -95,16 +95,16 @@ when :upload
 when :delete
 	filename = File.basename(args.path)
 	checkBucket(args.name, s3)
-	# begin
+	begin
 	 	resp = s3.delete_object({
 	 		bucket: args.name,
 	 		key: filename
 	 	})
-	# rescue Aws::S3::Errors::NoSuchBucket => err
-	# 	puts "#{err}!"  
-	# 	exit
-	# end
-	#puts "File #{filename} => #{resp.etag} deleted with success!" if args.verbose == true
+	rescue Exception
+		puts "Wrong file name"
+		exit
+	end
+	puts "File #{filename} deleted with success!" if args.verbose == true
 
 when :download
 	filename = File.basename(args.path)
