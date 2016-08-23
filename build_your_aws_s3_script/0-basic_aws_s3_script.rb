@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require "optparse"
-require "aws-sdk"
-require "yaml"
-require "logger"
+require 'optparse'
+require 'aws-sdk'
+require 'yaml'
+require 'logger'
 
 
 Options = Struct.new(:action,:name, :verbose, :empty, :path)
