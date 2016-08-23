@@ -100,8 +100,9 @@ when :delete
 	 		bucket: args.name,
 	 		key: filename
 	 	})
-	rescue Exception
+	rescue Exception => e
 		puts "Wrong file name"
+		puts e
 		exit
 	end
 	puts "File #{filename} deleted with success!" if args.verbose == true
