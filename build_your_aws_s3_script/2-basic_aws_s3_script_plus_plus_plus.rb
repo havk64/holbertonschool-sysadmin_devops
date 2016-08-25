@@ -89,6 +89,7 @@ when :upload
 when :delete
 	checkBucket(args.name, s3)
 	unless args.path.nil? # case the file name is informed delete the file, otherwise delete the bucket
+		checkFile(args.name,args.path, s3)
 		resp = deleteFile(args.name, args.path, s3)
 		puts "File #{args.path} deleted with success!" if args.verbose == true
 		# p resp # <= prints response for debugging purposes
