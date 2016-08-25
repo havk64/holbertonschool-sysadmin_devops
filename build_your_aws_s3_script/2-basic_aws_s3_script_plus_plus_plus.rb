@@ -6,7 +6,7 @@ require 'yaml'
 require 'logger'
 require './helpers'
 
-Options = Struct.new(:action, :name, :verbose, :empty, :path)
+Options = Struct.new(:action, :bucket, :verbose, :empty, :file)
 args = Options.new()
 args.empty = ARGV.empty?
 
@@ -17,10 +17,10 @@ parser = OptionParser.new do |opts|
 	  args.verbose = b
   end
   opts.on("-b", "--bucketname=BUCKET_NAME", "Name of the bucket to perform the action on") do |n|
-	  args.name = n
+	  args.bucket = n
   end
   opts.on("-f", "--filepath=FILE_PATH", "Path to the file to upload") do |f|
-	  args.path = f
+	  args.file = f
   end
   opts.on("-a", "--action=ACTION", [:create, :list, :upload, :delete, :download, :size], "Select action to perform [create, list, upload, delete, download, size]") do |a|
 	  args.action = a
@@ -57,16 +57,16 @@ p bucket
 case args.action
 when :create
 	begin
-		resp = s3.create_bucket({
+		resp = s3.client.create_bucket({
 			acl: 'authenticated-read',
-			bucket: args.name,
+			bucket: args.bucket,
 		})
 	rescue Exception => err
 		p err.message
 		puts "This bucket name is not available, try another one"
 		exit
 	end
-	p "Bucket \"#{args.name}\" created with success!"
+	p "Bucket \"#{args.bucket}\" created with success!"
 	puts "You can access it at the following address: #{resp.location}" if args.verbose == true
 
 when :list
@@ -84,43 +84,43 @@ when :list
 	end
 
 when :upload
-	filename = File.basename(args.path)
-	File.open(args.path, 'r') do |file|
-		resp = s3.put_object(bucket: args.name, key: filename, body: args.path)
+	filename = File.basename(args.file)
+	File.open(args.file, 'r') do |file|
+		resp = s3.put_object(bucket: args.bucket, key: filename, body: args.file)
 	end
 	puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 
 when :delete
-	checkBucket(args.name, s3)
-	unless args.path.nil? # case the file name is informed delete the file, otherwise delete the bucket
-		checkFile(args.name,args.path, s3)
-		resp = deleteFile(args.name, args.path, s3)
-		puts "File #{args.path} deleted with success!" if args.verbose == true
+	checkBucket(args.bucket, s3)
+	unless args.file.nil? # case the file name is informed delete the file, otherwise delete the bucket
+		checkFile(args.bucket,args.file, s3)
+		resp = deleteFile(args.bucket, args.file, s3)
+		puts "File #{args.file} deleted with success!" if args.verbose == true
 		# p resp # <= prints response for debugging purposes
 	else
 		begin
-			resp = s3.delete_bucket({ bucket: args.name })
+			resp = s3.delete_bucket({ bucket: args.bucket })
 		rescue Exception => err
 			puts err
-			puts "Couldn't delete the \"#{args.name}\" bucket"
+			puts "Couldn't delete the \"#{args.bucket}\" bucket"
 			exit
 		end
-		puts "The bucket \"#{args.name}\" was deleted with success!"
+		puts "The bucket \"#{args.bucket}\" was deleted with success!"
 	end
 
 when :download
-	checkBucket(args.name, s3)
-	resp = checkFile(args.name, args.path, s3)
+	checkBucket(args.bucket, s3)
+	resp = checkFile(args.bucket, args.file, s3)
 	puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
 
 when :size
 	total = 0.0
-	resp = checkBucket(args.name, s3)
+	resp = checkBucket(args.bucket, s3)
 	resp.contents.each do |obj|
 		total += obj.size
 	end
 	result = "%.2fMo" % [total/1024]
 	# Case verbosity is requested prints the second entry that is more descriptive
-	puts !args.verbose ? result : "The total size of the bucket \"#{args.name}\" is #{result}"
+	puts !args.verbose ? result : "The total size of the bucket \"#{args.bucket}\" is #{result}"
 end
 
