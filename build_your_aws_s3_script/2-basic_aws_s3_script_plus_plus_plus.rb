@@ -45,12 +45,14 @@ creds = YAML.load_file('config.yaml')
 Aws.config.update({
 	:logger => Logger.new($stdout)
 }) if args.verbose == true
-# Client constructors with credentials.
-s3 = Aws::S3::Client.new(
+# Resource constructors with credentials.
+s3 = Aws::S3::Resource.new(
 	region: creds['region'],
 	credentials: Aws::Credentials.new(creds['access_key_id'], creds['secret_access_key'])
 )
 
+bucket = s3.bucket(args.bucket)
+p bucket
 # Parse the action to be taken
 case args.action
 when :create
@@ -68,15 +70,17 @@ when :create
 	puts "You can access it at the following address: #{resp.location}" if args.verbose == true
 
 when :list
-	unless args.name.nil? # case the bucket name is informed prints list of objects on this bucker
-		resp = checkBucket(args.name, s3)
+	if bucket.nil?
+		listBuckets(s3)
+	elsif bucket.exists?
+		resp = s3.client.list_objects({bucket: bucket.name})
 		resp.contents.each do |obj|
 			puts "#{obj.key} => #{obj.etag}"
 		end
 	else
-		# case bucket name isn't informed just list all buckets
-		resp = s3.list_buckets
-		puts resp.buckets.map(&:name)
+		puts "Bucket \"#{args.bucket}\" doesn't exist"
+		puts "Valid buckets currently are:"
+		listBuckets(s3)
 	end
 
 when :upload
