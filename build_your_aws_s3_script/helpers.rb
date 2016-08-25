@@ -5,6 +5,7 @@ def listBuckets(client)
 	client.buckets.each do |b|
 		puts "#{b.name} => created at: #{b.creation_date}"
 	end
+	exit
 end
 
 # === checkFile function
@@ -13,13 +14,13 @@ end
 def checkFile(bucket, file, client)
 	filename = File.basename file
 	begin
-		resp = client.get_object({
+		resp = client.client.get_object({
 			bucket: bucket,
 			key: filename
 		})
 	rescue Aws::S3::Errors::NoSuchKey => err
 		puts err
-		resp = client.list_objects({ bucket: bucket })
+		resp = client.client.list_objects({ bucket: bucket })
 		puts "Valid files currently are: "
 		resp.contents.each do |obj|
 			puts "=> #{obj.key}"
@@ -35,7 +36,7 @@ end
 def deleteFile(bucket, file, client)
 	filename = File.basename(file)
 	begin
-	 	resp = client.delete_objects({
+	 	resp = client.client.delete_objects({
 	 		bucket: bucket,
 			delete: { objects: [
 				{ key: filename }
