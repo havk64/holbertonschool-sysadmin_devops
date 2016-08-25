@@ -52,7 +52,6 @@ s3 = Aws::S3::Resource.new(
 )
 
 bucket = s3.bucket(args.bucket)
-p bucket
 # Parse the action to be taken
 case args.action
 when :create
@@ -62,8 +61,7 @@ when :create
 			bucket: args.bucket,
 		})
 	rescue Exception => err
-		p err.message
-		puts "This bucket name is not available, try another one"
+		puts err.message
 		exit
 	end
 	p "Bucket \"#{args.bucket}\" created with success!"
