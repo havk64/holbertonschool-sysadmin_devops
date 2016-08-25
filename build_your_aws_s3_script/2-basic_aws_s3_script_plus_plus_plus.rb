@@ -22,7 +22,7 @@ parser = OptionParser.new do |opts|
   opts.on("-f", "--filepath=FILE_PATH", "Path to the file to upload") do |f|
 	  args.path = f
   end
-  opts.on("-a", "--action=ACTION", [:list, :upload, :delete, :download, :size], "Select action to perform [list, upload, delete, download, size]") do |a|
+  opts.on("-a", "--action=ACTION", [:create, :list, :upload, :delete, :download, :size], "Select action to perform [create, list, upload, delete, download, size]") do |a|
 	  args.action = a
   end
   opts.on("-h", "--help", "Returns the help menu") do
@@ -53,6 +53,20 @@ s3 = Aws::S3::Client.new(
 
 # Parse the action to be taken
 case args.action
+when :create
+	begin
+		resp = s3.create_bucket({
+			acl: 'authenticated-read',
+			bucket: args.name,
+		})
+	rescue Exception => err
+		p err.message
+		puts "This bucket name is not available, try another one"
+		exit
+	end
+	p "Bucket \"#{args.name}\" created with success!"
+	puts "You can access it at the following address: #{resp.location}" if args.verbose == true
+
 when :list
 	unless args.name.nil? # case the bucket name is informed prints list of objects on this bucker
 		resp = checkBucket(args.name, s3)
