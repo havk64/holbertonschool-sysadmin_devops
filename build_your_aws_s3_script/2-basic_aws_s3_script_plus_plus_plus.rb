@@ -87,23 +87,34 @@ when :upload
 	puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 
 when :delete
-	filename = File.basename(args.path)
 	checkBucket(args.name, s3)
-	begin
-	 	resp = s3.delete_objects({
-	 		bucket: args.name,
-			delete: { objects: [
-				{ key: filename }
-			],
-			quiet: false }
-		})
-	rescue Exception => e
-		puts "Wrong file name"
-		puts e
-		exit
+	unless args.path.nil?
+		filename = File.basename(args.path)
+		begin
+		 	resp = s3.delete_objects({
+		 		bucket: args.name,
+				delete: { objects: [
+					{ key: filename }
+				],
+				quiet: false }
+			})
+		rescue Exception => e
+			puts "Wrong file name"
+			puts e
+			exit
+		end
+		puts "File #{filename} deleted with success!" if args.verbose == true
+		p resp
+	else
+		begin
+			resp = s3.delete_bucket({ bucket: args.name })
+		rescue Exception => err
+			puts err
+			puts "Couldn't delete the #{args.name} bucket"
+			exit
+		end
+		puts "The bucket \"#{args.name}\" was deleted with success!"
 	end
-	puts "File #{filename} deleted with success!" if args.verbose == true
-	p resp
 
 when :download
 	checkBucket(args.name, s3)
