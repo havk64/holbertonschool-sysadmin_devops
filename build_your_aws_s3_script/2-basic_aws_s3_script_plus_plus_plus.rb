@@ -89,21 +89,26 @@ when :upload
 	puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 
 when :delete
-	checkBucket(args.bucket, s3)
-	unless args.file.nil? # case the file name is informed delete the file, otherwise delete the bucket
-		checkFile(args.bucket,args.file, s3)
-		resp = deleteFile(args.bucket, args.file, s3)
-		puts "File #{args.file} deleted with success!" if args.verbose == true
-		# p resp # <= prints response for debugging purposes
-	else
-		begin
-			resp = s3.delete_bucket({ bucket: args.bucket })
-		rescue Exception => err
-			puts err
-			puts "Couldn't delete the \"#{args.bucket}\" bucket"
-			exit
+	if bucket.exists?
+		unless args.file.nil? # case the file name is informed delete the file, otherwise delete the bucket
+			checkFile(args.bucket,args.file, s3)
+			resp = deleteFile(args.bucket, args.file, s3)
+			puts "File #{args.file} deleted with success!" if args.verbose == true
+			# p resp # <= prints response for debugging purposes
+		else
+			begin
+				resp = s3.client.delete_bucket({ bucket: args.bucket })
+			rescue Exception => err
+				puts "Couldn't delete the \"#{args.bucket}\" bucket"
+				puts err
+				exit
+			end
+			puts "The bucket \"#{args.bucket}\" was deleted with success!"
 		end
-		puts "The bucket \"#{args.bucket}\" was deleted with success!"
+	else
+		puts "Bucket \"#{args.bucket}\" doesn't exist"
+		puts "Valid buckets currently are:"
+		listBuckets(s3)
 	end
 
 when :download
