@@ -41,4 +41,24 @@ def checkFile(bucket, file, client)
 	return resp
 end
 
+# === deleteFile function
+# Try to delete the file informed 
+# Exit if it fails
+def deleteFile(bucket, file, client)
+	filename = File.basename(file)
+	begin
+	 	resp = client.delete_objects({
+	 		bucket: bucket,
+			delete: { objects: [
+				{ key: filename }
+			],
+			quiet: false }
+		})
+	rescue Exception => e
+		puts "Wrong file name"
+		puts e
+		exit
+	end
+	return resp
+end
 
