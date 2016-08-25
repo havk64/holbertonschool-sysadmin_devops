@@ -88,29 +88,16 @@ when :upload
 
 when :delete
 	checkBucket(args.name, s3)
-	unless args.path.nil?
-		filename = File.basename(args.path)
-		begin
-		 	resp = s3.delete_objects({
-		 		bucket: args.name,
-				delete: { objects: [
-					{ key: filename }
-				],
-				quiet: false }
-			})
-		rescue Exception => e
-			puts "Wrong file name"
-			puts e
-			exit
-		end
-		puts "File #{filename} deleted with success!" if args.verbose == true
-		p resp
+	unless args.path.nil? # case the file name is informed delete the file, otherwise delete the bucket
+		resp = deleteFile(args.name, args.path, s3)
+		puts "File #{args.path} deleted with success!" if args.verbose == true
+		# p resp # <= prints response for debugging purposes
 	else
 		begin
 			resp = s3.delete_bucket({ bucket: args.name })
 		rescue Exception => err
 			puts err
-			puts "Couldn't delete the #{args.name} bucket"
+			puts "Couldn't delete the \"#{args.name}\" bucket"
 			exit
 		end
 		puts "The bucket \"#{args.name}\" was deleted with success!"
