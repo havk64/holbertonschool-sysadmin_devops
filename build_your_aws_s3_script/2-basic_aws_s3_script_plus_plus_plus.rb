@@ -84,7 +84,7 @@ when :list
 when :upload
 	filename = File.basename(args.file)
 	File.open(args.file, 'r') do |file|
-		resp = s3.put_object(bucket: args.bucket, key: filename, body: args.file)
+		resp = s3.client.put_object(bucket: args.bucket, key: filename, body: args.file)
 	end
 	puts "File #{filename} => #{resp.etag} uploaded with success!" if args.verbose == true
 
