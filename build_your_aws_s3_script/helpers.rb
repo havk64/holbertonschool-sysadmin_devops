@@ -1,22 +1,10 @@
 
-# === CheckBucket function
-# Verify if bucket name is correct
-# Case not it prints the list of buckets and exit
-def checkBucket(bucket, client)
-	begin
-		resp = client.list_objects({ bucket: bucket })
-	rescue Aws::S3::Errors::NoSuchBucket => err
-		# Catching errors case name informed is wrong
-		puts "#{err}!" 
-		resp = client.list_buckets
-		# Informe current buckets
-		puts "Valid buckets currently are: "
-		resp.buckets.map(&:name).each do |item|
-			puts "=> #{item}"
-		end
-		exit
+# === listBuckets function
+# Prints the list of buckets
+def listBuckets(client)
+	client.buckets.each do |b|
+		puts "#{b.name} => created at: #{b.creation_date}"
 	end
-	return resp
 end
 
 # === checkFile function
