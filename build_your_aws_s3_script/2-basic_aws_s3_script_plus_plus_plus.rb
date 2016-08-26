@@ -128,13 +128,19 @@ when :download
 	end
 
 when :size
-	total = 0.0
-	resp = s3.client.list_objects({ bucket: args.bucket })
-	resp.contents.each do |obj|
-		total += obj.size
+	if bucket.exists?
+		total = 0.0
+		resp = s3.client.list_objects({ bucket: args.bucket })
+		resp.contents.each do |obj|
+			total += obj.size
+		end
+		result = "%.2fMo" % [total/1024]
+		# Case verbosity is requested prints the second entry that is more descriptive
+		puts !args.verbose ? result : "The total size of the bucket \"#{args.bucket}\" is #{result}"
+	else
+		puts "Bucket \"#{args.bucket}\" doesn't exist"
+		puts "Valid buckets currently are:"
+		listBuckets(s3)
 	end
-	result = "%.2fMo" % [total/1024]
-	# Case verbosity is requested prints the second entry that is more descriptive
-	puts !args.verbose ? result : "The total size of the bucket \"#{args.bucket}\" is #{result}"
 end
 
