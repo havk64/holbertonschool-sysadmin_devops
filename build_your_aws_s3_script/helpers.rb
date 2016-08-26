@@ -3,7 +3,7 @@
 # Prints the list of buckets
 def listBuckets(client)
 	client.buckets.each do |b|
-		puts "#{b.name} => created at: #{b.creation_date}"
+		puts "%-30s => created at: %s" % [b.name, b.creation_date]
 	end
 	exit
 end
