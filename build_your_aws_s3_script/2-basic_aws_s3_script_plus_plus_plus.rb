@@ -129,7 +129,7 @@ when :download
 
 when :size
 	total = 0.0
-	resp = checkBucket(args.bucket, s3)
+	resp = s3.client.list_objects({ bucket: args.bucket })
 	resp.contents.each do |obj|
 		total += obj.size
 	end
