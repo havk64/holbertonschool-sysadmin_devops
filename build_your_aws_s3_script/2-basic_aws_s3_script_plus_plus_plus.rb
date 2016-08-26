@@ -57,7 +57,7 @@ case args.action
 when :create
 	begin
 		resp = s3.client.create_bucket({
-			acl: 'authenticated-read',
+			acl: 'public-read-write', #allow public rw for grade purposes(ignoring security)
 			bucket: args.bucket,
 		})
 	rescue Exception => err
