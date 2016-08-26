@@ -112,9 +112,20 @@ when :delete
 	end
 
 when :download
-	checkBucket(args.bucket, s3)
-	resp = checkFile(args.bucket, args.file, s3)
-	puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
+	if bucket.exists?
+		checkFile(args.bucket, args.file, s3)
+		filename = File.basename(args.file)
+		resp = s3.client.get_object({
+			bucket: args.bucket,
+			response_target: args.file,
+			key: filename
+		})
+		puts "The file #{filename} => #{resp.etag} was downloaded with success!" if args.verbose == true
+	else
+		puts "Bucket \"#{args.bucket}\" doesn't exist"
+		puts "Valid buckets currently are:"
+		listBuckets(s3)
+	end
 
 when :size
 	total = 0.0
