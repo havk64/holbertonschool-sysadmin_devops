@@ -74,7 +74,8 @@ when :list
 	elsif bucket.exists?
 		resp = s3.client.list_objects({bucket: bucket.name})
 		resp.contents.each do |obj|
-			puts "#{obj.key} => #{obj.etag}"
+			#puts "#{obj.key} => #{obj.etag}"
+			puts "%-30s => %s" % [obj.key, obj.etag]
 		end
 	else
 		puts "Bucket \"#{options.bucket}\" doesn't exist"
