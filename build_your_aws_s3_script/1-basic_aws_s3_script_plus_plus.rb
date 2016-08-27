@@ -6,7 +6,7 @@ require 'yaml'
 require 'logger'
 
 
-Options = Struct.new(:action,:name, :verbose, :empty, :path)
+Options = Struct.new(:action,:name, :verbose, :path)
 
 class Parser
 	def self.parse options
