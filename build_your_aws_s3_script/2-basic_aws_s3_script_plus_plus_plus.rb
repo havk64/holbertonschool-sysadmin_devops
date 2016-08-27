@@ -35,7 +35,7 @@ class Parser
 			        exit
 			end
 		end
-		#p options
+		# In case no arguments are passed the usage/help is shown
 		options[0] = '-h' if options.empty? 
 		parser.parse! options
 		args
