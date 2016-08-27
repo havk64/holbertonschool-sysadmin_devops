@@ -14,8 +14,10 @@ class Parser
 		parser = OptionParser.new do |opts|
 			opts.banner = "Usage: s3_script.rb [options]"
 			
-			opts.on("-v", "--verbose", "Run verbosely") do |b|
-			        args.verbose = b
+			opts.separator ""
+			opts.separator "Specific options:"
+			opts.on("-a", "--action=ACTION", [:check, :list, :upload, :delete, :download, :size], "Select action to perform [list, upload, delete, download, size]") do |a|
+			        args.action = a
 			end
 			opts.on("-b", "--bucketname=BUCKET_NAME", "Name of the bucket to perform the action on") do |n|
 			        args.bucket = n
@@ -23,8 +25,10 @@ class Parser
 			opts.on("-f", "--filepath=FILE_PATH", "Path to the file to upload") do |f|
 			        args.file = f
 			end
-			opts.on("-a", "--action=ACTION", [:check, :list, :upload, :delete, :download, :size], "Select action to perform [list, upload, delete, download, size]") do |a|
-			        args.action = a
+			opts.separator ""
+			opts.separator "Common options:"
+			opts.on("-v", "--verbose", "Run verbosely") do |b|
+			        args.verbose = b
 			end
 			opts.on("-h", "--help", "Returns the help menu") do
 			        puts opts
