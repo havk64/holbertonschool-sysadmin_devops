@@ -4,7 +4,8 @@
 
 By Julien Barbier
 
-==========
+---
+
 ### Requirements
 
 - Allowed editors: vi, vim, emacs
@@ -102,7 +103,7 @@ By Julien Barbier
 
   Replace all characters `A` and `c` from input to `Z` and `e` respectively.
 
-- [Task 20](20-hiago). * Without C, you would live in hiago.
+- [Task 20](20-hiago). *Without C, you would live in hiago.
 
   Removes all letters `c` and `C` from the standard input.
 
