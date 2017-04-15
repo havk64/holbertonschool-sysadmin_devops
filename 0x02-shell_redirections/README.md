@@ -8,9 +8,9 @@ By Julien Barbier
 
 - Task 0. Hello World
 
-The *Hello World* script just prints "Hello World" followed by a new line to standard output.
+  The *Hello World* script just prints "Hello World" followed by a new line to standard output.
 
 - Task 1.
 
-The script *Confused smiley* displays a confused smiley `"(Ôo)'` to the standard output.
+  The script *Confused smiley* displays a confused smiley `"(Ôo)'` to the standard output.
 
