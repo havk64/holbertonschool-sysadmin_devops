@@ -114,3 +114,13 @@ By Julien Barbier
 - [Task 22](22-users_and_homes). *DJ Cut Killer*
 
   Displays all users and their home directories, sorted by users.
+
+- [Task 23](100-empty_casks). *Emtpy casks make the most noise*
+
+  Finds empty files and directories in the current andd all sub-directories and
+  displays only its names(without the path).
+
+- [Task 24](101-gifs). *A gif is worth the thousands words*
+
+  Lists all files with a `.gif` extension in the current and all its sub-directories.
+
