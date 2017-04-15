@@ -60,7 +60,7 @@ By Julien Barbier
 
 - [Task 9](9-duplicate_last_line). *Duplicate last line*
 
-  Duplicates the last line of the `[iacta](iacta)` file.
+  Duplicates the last line of the [`iacta`](iacta) file.
 
 - [Task 10](10-no_more_js). *No more javascript*
 
