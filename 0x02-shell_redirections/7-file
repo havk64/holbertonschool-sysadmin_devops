@@ -1,3 +1,3 @@
 #!/bin/bash
-printf "Holberton School\n\n" > '\*\\'\''"Holberton School"'\\\''\\*$\?\*\*\*\*\*:)'
+printf "Holberton School\n\n" > '\*\\'\''"Holberton School"\'\''\\*$\?\*\*\*\*\*:)'
 
