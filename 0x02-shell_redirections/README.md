@@ -46,7 +46,7 @@ By Julien Barbier
 
 - [Task 6](6-third_line). *Line #2*
 
-  Displays the third line of the `[iacta](https://en.wikipedia.org/wiki/Alea_iacta_est)` file.
+  Displays the third line of the [`iacta`](https://en.wikipedia.org/wiki/Alea_iacta_est) file.
 
 - [Task 7](8-cwd_state). *Save current state of directory*
 
@@ -103,7 +103,7 @@ By Julien Barbier
 
   Replace all characters `A` and `c` from input to `Z` and `e` respectively.
 
-- [Task 20](20-hiago). *Without C, you would live in hiago.
+- [Task 20](20-hiago). *Without C, you would live in hiago*.
 
   Removes all letters `c` and `C` from the standard input.
 
