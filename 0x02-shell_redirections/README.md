@@ -69,3 +69,26 @@ By Julien Barbier
 - [Task 14](14-findthatword). *It must be in that file*
   Displays lines containing the pattern "root" from the `/etc/passwd` file.
 
+- [Task 15](15-countthatword). *Count that word*
+  Displays the number of lines that contain the pattern "bin" in the file `/etc/passwd`
+
+- [Task 16](16-whatsnext). *What's next?*
+  Displays lines containing the patter "root" and 3 lines after in the file `/etc/passwd`
+
+- [Task 17](17-hidethisword). *I hate bins*
+  Displays all the lines of the file `/etc/passwd` that do not contain the pattern "bin".
+
+- [Task 18](18-letteronly). *Letters only please*
+  Display all lines of the `/etc/ssh/sshd_config` starting with a letter.
+
+- [Task 19](19-AZ). *A to Z*
+  Replace all characters `A` and `c` from input to `Z` and `e` respectively.
+
+- [Task 20](20-hiago). * Without C, you would live in hiago.
+  Removes all letters `c` and `C` from the standard input.
+
+- [Task 21](21-reverse). *esreveR*
+  Reverses from standard input.
+
+- [Task 22](22-users_and_homes). *DJ Cut Killer*
+  Displays all users and their home directories, sorted by users.
