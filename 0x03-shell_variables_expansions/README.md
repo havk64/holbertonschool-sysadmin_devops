@@ -80,3 +80,11 @@ by Julien Barbier
   - The output should be alpha ordered, starting with `aa`
   - Do not print `oo`
   - The script file should contain maximum 64 characters
+  
+- [Task 13](13-print_float). *Floats*
+
+  Prints an exported number with two decimal places
+
+-[Task 14](14-decimal_to_hexadecimal). *Decimal to Hexadecimal*
+
+  Converts a number(stored in an env variable) from base 10 to base 16
