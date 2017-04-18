@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Infinite loop which emits a different output when receives a SIGTERM signal
+trap "echo 'I am invincible!!!'" SIGTERM
+
+while :
+do
+	echo "To infinity and beyond"
+	sleep 2
+done
