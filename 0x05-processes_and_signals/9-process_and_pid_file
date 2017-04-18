@@ -2,11 +2,16 @@
 # Catches software interrupt signals, loop some msg, prints its PID to a file
 PID=$$
 PIDFILE=/tmp/run/holbertonscript.pid
+function cleanquit
+{
+	rm "$PIDFILE"
+	exit
+}
 
 echo $PID > $PIDFILE
 trap "echo 'I hate the kill command'" SIGTERM
 trap "echo 'Y U no love me?!'" SIGINT
-trap "rm $PIDFILE; exit" SIGQUIT SIGTERM
+trap "cleanquit" SIGQUIT SIGTERM
 
 while :
 do
