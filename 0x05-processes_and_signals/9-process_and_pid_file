@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Catches software interrupt signals, loop some msg, prints its PID to a file
+PID=$$
+PIDFILE=/tmp/run/holbertonscript.pid
+
+echo $PID > $PIDFILE
+trap "echo 'I hate the kill command'" SIGTERM
+trap "echo 'Y U no love me?!'" SIGINT
+trap "rm $PIDFILE; exit" SIGQUIT SIGTERM
+
+while :
+do
+	echo "To infinity and beyond"
+	sleep 2
+done
+
