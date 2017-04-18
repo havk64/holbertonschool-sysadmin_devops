@@ -11,7 +11,7 @@ function cleanquit
 echo $PID > $PIDFILE
 trap "echo 'I hate the kill command'" SIGTERM
 trap "echo 'Y U no love me?!'" SIGINT
-trap "cleanquit" SIGQUIT SIGTERM
+trap "cleanquit" SIGQUIT
 
 while :
 do
