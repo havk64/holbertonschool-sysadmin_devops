@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Catches software interrupt signals, loop some msg, prints its PID to a file
 PID=$$
-PIDFILE=/tmp/run/holbertonscript.pid
+PIDFILE=/var/run/holbertonscript.pid
 function cleanquit
 {
 	rm "$PIDFILE"
