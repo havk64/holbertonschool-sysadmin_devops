@@ -3,16 +3,16 @@
 PID=$$
 PIDFILE=/var/run/holbertonscript.pid
 
-function cleanquit
+function cleanexit
 {
 	rm "$PIDFILE"
 	exit
 }
 
 echo $PID > $PIDFILE
-trap "echo 'I hate the kill command'; cleanquit" SIGTERM
+trap "echo 'I hate the kill command'; cleanexit" SIGTERM
 trap "echo 'Y U no love me?!'" SIGINT
-trap "cleanquit" SIGQUIT
+trap "cleanexit" SIGQUIT
 
 while :
 do
