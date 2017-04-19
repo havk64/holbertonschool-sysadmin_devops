@@ -3,3 +3,5 @@
 
 apt-get install -y nginx > /dev/null 2>&1
 echo "Holberton School" > /usr/share/nginx/html/index.html > /dev/null 2>&1
+service nginx restart
+exit 0
