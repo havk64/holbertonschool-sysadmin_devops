@@ -2,6 +2,15 @@
 # Install Nginx Web Server on an Ubuntu machine
 
 apt-get install -y nginx > /dev/null 2>&1
-echo "Holberton School" > /usr/share/nginx/html/index.html > /dev/null 2>&1
-service nginx restart
+service nginx stop
+
+cat > /etc/nginx/sites-available/default <<EOF
+server {
+	listen 80;
+	root /usr/share/nginx/html;
+	index.html;
+}
+EOF
+echo "Holberton School" > /usr/share/nginx/html/index.html
+service nginx start
 exit 0
