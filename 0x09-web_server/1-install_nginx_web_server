@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Install Nginx Web Server on an Ubuntu machine
+
+apt-get update && apt-get install -y nginx
+echo "Holberton School" > /usr/share/nginx/html/index.html
