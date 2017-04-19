@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Bash script to send files from local client to a remote server
+
+SCRIPT=$(basename "$0")
+USAGE="Usage: $SCRIPT PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+SPATH="$1"
+IP="$2"
+USER="$3"
+SKP="$4"
+
+if [ $# -lt 3 ];
+then
+	echo $USAGE;
+	exit;
+fi
+
+
+scp -i $SKP -o StrictHostKeyChecking=no $SPATH $USER@$IP:. 
