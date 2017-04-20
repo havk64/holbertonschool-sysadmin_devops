@@ -15,7 +15,7 @@ server {
 	location / {
 		error_page 404 /404.html;
 		rewrite ^(/redirect_me.*) https://moz.com/learn/seo/redirection permanent;
-		add_header X-Served-By "$(hostname)";
+		add_header X-Served-By \$hostname;
 	}
 }
 EOF
