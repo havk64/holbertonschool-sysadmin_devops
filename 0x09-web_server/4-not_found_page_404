@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install Nginx Web Server on an Ubuntu machine and
 # redirect all traffic of /redirect_me to other website
-# and configure a custom 404 page
+# also configure a custom 404 page
 
 apt-get update && apt-get install -y nginx
 service nginx stop
