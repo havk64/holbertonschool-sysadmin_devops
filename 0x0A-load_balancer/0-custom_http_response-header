@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Install Nginx Web Server on an Ubuntu machine
+# - Configures a custom 404 page
+# - Redirect all traffic of /redirect_me to other website
+# - Add a custom header to Nginx server in order to identify servers on LB
+
+apt-get update && apt-get install -y nginx
+service nginx stop
+
+cat > /etc/nginx/sites-available/default <<EOF
+server {
+	listen 80;
+	root /usr/share/nginx/html;
+	index index.html;
+	location / {
+		error_page 404 /404.html;
+		rewrite ^(/redirect_me.*) https://moz.com/learn/seo/redirection permanent;
+		add_header X-Served-By "$(hostname)";
+	}
+}
+EOF
+
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/404.html
+echo "Holberton School" > /usr/share/nginx/html/index.html
+service nginx start
