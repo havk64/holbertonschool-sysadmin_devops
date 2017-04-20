@@ -18,5 +18,3 @@ EOF
 
 echo "Holberton School" > /usr/share/nginx/html/index.html
 service nginx start
-
-
