@@ -9,5 +9,7 @@ pkill apache2
 sed -i.bak '/^\tlisten.*80/s/80/8080/' $siteconf
 sed -i.bak '/^#user/ c\user nginx' $ngconf
 sed -i.bak '/^.Service./ a\User=nginx\nGroup=nginx' $nginit
+chown nginx:nginx $ngconf
+chmod 644 $ngconf
 service nginx start
 
