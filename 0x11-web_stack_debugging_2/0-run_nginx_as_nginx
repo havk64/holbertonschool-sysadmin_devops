@@ -11,5 +11,5 @@ sed -i.bak '/^#user/ c\user nginx' $ngconf
 sed -i.bak '/^.Service./ a\User=nginx\nGroup=nginx' $nginit
 chown nginx:nginx $ngconf
 chmod 644 $ngconf
-service nginx start
+sudo -u nginx service nginx start
 
