@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Make the Nginx run as nginx user
+
+siteconf='/etc/nginx/sites-available/default'
+ngconf='/etc/nginx/nginx.conf'
+nginit='/lib/systemd/system/nginx.service'
+
+pkill apache2
+sed -i.bak '/^\tlisten.*80/s/80/8080/' $siteconf
+sed -i.bak '/^#user/ c\user nginx' $ngconf
+sed -i.bak '/^.Service./ a\User=nginx\nGroup=nginx' $nginit
+service nginx start
+
