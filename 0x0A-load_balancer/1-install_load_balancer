@@ -8,6 +8,8 @@ add-apt-repository ppa:vbernat/haproxy-1.5 -y
 apt-get update
 apt-get install -y haproxy
 
+sed -i.bak '/\tmode\thttp/ a\\toption\tforwardfor' $haconf
+
 cat << EOF >> $haconf
 
 frontend http-frontend
@@ -16,6 +18,8 @@ frontend http-frontend
 
 backend wwwbackend
 	balance roundrobin
+	http-request set-header X-Forwarded-Port %[dst_port]
+	http-request add-header X-Forwarded-Proto https if { ssl_fc }
 	server 23-web-01 158.69.78.253:80 check
 	server 23-web-02 204.236.242.13:80 check
 
