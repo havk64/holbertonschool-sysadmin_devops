@@ -18,6 +18,12 @@ backend wwwbackend
 	balance roundrobin
 	server 23-web-01 158.69.78.253:80 check
 	server 23-web-02 204.236.242.13:80 check
+
+listen stats *:9000
+        stats enable
+        stats uri /haproxy_stats
+        stats hide-version
+        stats auth admin:12345
 EOF
 
 service haproxy restart
