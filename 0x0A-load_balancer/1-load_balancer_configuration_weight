@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+haconf='/etc/haproxy/haproxy.cfg'
+
+apt-get install -y software-properties-common
+add-apt-repository ppa:vbernat/haproxy-1.5 -y
+apt-get update
+apt-get install -y haproxy
+
+cat << EOF >> $haconf
+
+frontend http-frontend
+	bind *:80
+	default_backend wwwbackend
+
+backend wwwbackend
+	balance roundrobin
+	server 23-web-01 158.69.78.253:80 check
+	server 23-web-02 204.236.242.13:80 check
+EOF
+
+service haproxy restart
