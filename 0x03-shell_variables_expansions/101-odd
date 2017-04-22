@@ -1,2 +1,2 @@
 #!/bin/bash
-xargs printf '%s\n'
+grep -n "" | grep "^\d*[13579]:" | cut -d ':' -f 2
