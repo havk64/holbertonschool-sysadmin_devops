@@ -85,6 +85,14 @@ by Julien Barbier
 
   Prints an exported number with two decimal places
 
--[Task 14](14-decimal_to_hexadecimal). *Decimal to Hexadecimal*
+- [Task 14](14-decimal_to_hexadecimal). *Decimal to Hexadecimal*
 
   Converts a number(stored in an env variable) from base 10 to base 16
+
+- [Task 17](100-rot13). *Everyone is a proponent of strong encryption*
+
+  Encodes and decodes text using the rot13 encryption.
+
+- [Task 18](101-odd). *The eggs of the brood need to be an odd number*
+
+  Prints every other line from the input, starting with the first line
