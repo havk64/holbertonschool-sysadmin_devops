@@ -20,7 +20,6 @@ cat <<\EOF > manage_my_process
 
 PID=$$
 PIDFILE='/var/run/my_process.pid'
-
 echo "$PID" > $PIDFILE
 
 remove()
@@ -61,6 +60,7 @@ stop()
 restart()
 {
 	pkill -fx "bash ./$MY_PROCESS"
+	sleep 2
 	start "restarted"
 }
 
