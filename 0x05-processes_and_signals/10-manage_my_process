@@ -14,6 +14,7 @@ then
 	usage
 fi
 
+# Create the file to be managed(if the file doesn't exist), make it executable
 [[ -e "$MY_PROCESS" ]] || (cat <<\EOF > "$MY_PROCESS" && chmod +x $MY_PROCESS)
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
@@ -40,7 +41,6 @@ init()
 }
 
 init
-exit 0
 EOF
 
 
