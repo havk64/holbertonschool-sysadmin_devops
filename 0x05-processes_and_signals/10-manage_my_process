@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 # Management of process/daemons with start, stop restart
 
+PIDFILE='/var/run/my_process.pid'
+MY_PROCESS='manage_my_process'
+
+usage()
+{
+	printf '%s\n' "Usage: $(basename "$0") {start|stop|restart}"
+	exit 1
+}
+
+if [ $# -ne 1 ]
+then
+	usage
+fi
+
 cat <<EOF > manage_my_process
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
+
 init()
 {
 	while :
@@ -16,3 +31,43 @@ init()
 init
 EOF
 
+chmod +x manage_my_process
+
+start()
+{
+	./$MY_PROCESS > /dev/null 2>&1 &
+	PID=$(pgrep -f $MY_PROCESS)
+	echo "$PID" | sudo tee $PIDFILE
+	sudo cat $PIDFILE
+	echo "manage_my_process $1"
+}
+
+stop()
+{
+	PID=$(pgrep -f "$MY_PROCESS")
+	rm -f $PIDFILE
+	echo "manage_my_process stopped"
+}
+
+restart()
+{
+	PID=$(pgrep -f "$MY_PROCESS")
+	kill "$PID"
+	rm -f $PIDFILE
+	start "restarted"
+}
+
+case "$1" in
+	start)
+		start "start"
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	*)
+		usage
+		;;
+esac
