@@ -34,7 +34,7 @@ init()
 {
 	while :
 	do
-		echo 'I am alive!' >> /tmp/my_process
+		echo 'To infinity and beyond' >> /tmp/my_process
 		sleep 2
 	done
 }
