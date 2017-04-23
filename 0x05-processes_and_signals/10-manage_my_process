@@ -9,7 +9,7 @@ usage()
 	exit 1
 }
 
-if [ $# -ne 1 ]
+if [[ $# -ne 1 ]]
 then
 	usage
 fi
@@ -20,11 +20,11 @@ fi
 
 PID=$$
 PIDFILE='/var/run/my_process.pid'
-echo "$PID" > $PIDFILE
+echo "$PID" | sudo tee $PIDFILE > /dev/null
 
 remove()
 {
-	rm -f $PIDFILE
+	sudo rm -f $PIDFILE
 	exit 0
 }
 
