@@ -14,7 +14,7 @@ then
 	usage
 fi
 
-cat <<\EOF > "$MY_PROCESS" && chmod +x $MY_PROCESS
+[[ -e "$MY_PROCESS" ]] || (cat <<\EOF > "$MY_PROCESS" && chmod +x $MY_PROCESS)
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
 
