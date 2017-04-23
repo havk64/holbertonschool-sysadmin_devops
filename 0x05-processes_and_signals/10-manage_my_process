@@ -14,7 +14,7 @@ then
 	usage
 fi
 
-cat <<\EOF > manage_my_process
+cat <<\EOF > "$MY_PROCESS" && chmod +x $MY_PROCESS
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
 
@@ -43,7 +43,6 @@ init
 exit 0
 EOF
 
-chmod +x manage_my_process
 
 start()
 {
