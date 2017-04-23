@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Management of process/daemons with start, stop restart
 
+cat <<EOF > manage_my_process
+#!/usr/bin/env bash
+# This script is the "worker" to be managed
 init()
 {
 	while :
@@ -11,3 +14,5 @@ init()
 }
 
 init
+EOF
+
