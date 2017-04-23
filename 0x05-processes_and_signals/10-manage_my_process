@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Management of process/daemons with start, stop restart
 
-PIDFILE='/var/run/my_process.pid'
 MY_PROCESS='manage_my_process'
 
 usage()
@@ -15,9 +14,22 @@ then
 	usage
 fi
 
-cat <<EOF > manage_my_process
+cat <<\EOF > manage_my_process
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
+
+PID=$$
+PIDFILE='/var/run/my_process.pid'
+
+echo "$PID" > $PIDFILE
+
+remove()
+{
+	rm -f $PIDFILE
+	exit 0
+}
+
+trap remove SIGTERM
 
 init()
 {
@@ -29,6 +41,7 @@ init()
 }
 
 init
+exit 0
 EOF
 
 chmod +x manage_my_process
@@ -36,24 +49,18 @@ chmod +x manage_my_process
 start()
 {
 	./$MY_PROCESS > /dev/null 2>&1 &
-	PID=$(pgrep -f $MY_PROCESS)
-	echo "$PID" | sudo tee $PIDFILE
-	sudo cat $PIDFILE
-	echo "manage_my_process $1"
+	echo "$MY_PROCESS $1"
 }
 
 stop()
 {
-	PID=$(pgrep -f "$MY_PROCESS")
-	rm -f $PIDFILE
-	echo "manage_my_process stopped"
+	pkill -fx "bash ./$MY_PROCESS"
+	echo "$MY_PROCESS stopped"
 }
 
 restart()
 {
-	PID=$(pgrep -f "$MY_PROCESS")
-	kill "$PID"
-	rm -f $PIDFILE
+	pkill -fx "bash ./$MY_PROCESS"
 	start "restarted"
 }
 
