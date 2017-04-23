@@ -21,7 +21,7 @@ fi
 
 PID=$$
 PIDFILE='/var/run/my_process.pid'
-echo "$PID" | sudo tee $PIDFILE > /dev/null
+echo "$PID" | sudo tee "$PIDFILE" > /dev/null
 
 remove()
 {
@@ -65,7 +65,7 @@ restart()
 
 case "$1" in
 	start)
-		start "start"
+		start "started"
 		;;
 	stop)
 		stop
