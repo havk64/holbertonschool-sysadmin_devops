@@ -27,3 +27,13 @@ init_msg()
 	[ "$output" = "$USAGE" ]
 }
 
+@test "Starts and prints friendly msg" {
+	run "$EXECFILE" start
+	[ "$status" -eq 0 ]
+	[ "$output" = "$(init_msg 'started')" ]
+}
+
+@test "Creates the PID file" {
+	[ -e "$PIDFILE" ]
+}
+
