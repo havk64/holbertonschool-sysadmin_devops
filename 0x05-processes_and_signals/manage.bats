@@ -4,7 +4,7 @@
 EXECFILE='./10-manage_my_process'
 USAGE="Usage: manage_my_process {start|stop|restart}"
 
-init_msg()
+feedback_msg()
 {
 	echo "manage_my_process $1"
 }
@@ -30,10 +30,20 @@ init_msg()
 @test "Starts and prints friendly msg" {
 	run "$EXECFILE" start
 	[ "$status" -eq 0 ]
-	[ "$output" = "$(init_msg 'started')" ]
+	[ "$output" = "$(feedback_msg 'started')" ]
 }
 
 @test "Creates the PID file" {
 	[ -e "$PIDFILE" ]
 }
 
+
+@test "$TMPFILE was create" {
+	[ -e "$TMPFILE" ]
+}
+
+@test "Stops when argument stop is given" {
+	run "$EXECFILE" stop
+	[ "$status" -eq 0 ]
+	[ "$output" = "$(feedback_msg 'stopped')" ]
+}
