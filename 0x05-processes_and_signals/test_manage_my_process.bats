@@ -55,3 +55,20 @@ feedback_msg()
 	[ "$output" = "$(feedback_msg 'stopped')" ]
 	[[ ! -e $PIDFILE ]]
 }
+
+@test "Restarts when restart argument is given" {
+	[[ ! -e $PIDFILE ]]
+	run "$INIT" start
+	PID=$(head -1 "$PIDFILE")
+	[ -e "$PIDFILE" ]
+	[ -s "$PIDFILE" ]
+	run "$INIT" restart
+	[ -e "$PIDFILE" ]
+	[ -s "$PIDFILE" ]
+	# It should be modified since last time read(head command above)
+	[[ -N $PIDFILE ]]
+	NEWPID=$(head -1 "$PIDFILE")
+	[ "$status" -eq 0 ]
+	[ "$output" = "$(feedback_msg 'restarted')" ]
+	[[ "$PID" != "$NEWPID" ]]
+}
