@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# This script is the "worker" to be managed
+
+PID=$$
+PIDFILE='/var/run/my_process.pid'
+echo "$PID" | sudo tee "$PIDFILE" > /dev/null
+
+remove()
+{
+	time sudo rm -f $PIDFILE
+	echo "File removed!"
+	exit 0
+}
+
+trap remove SIGTERM
+
+init()
+{
+	while :
+	do
+		echo 'I am alive!' >> /tmp/my_process
+		sleep 2
+	done
+}
+
+init
