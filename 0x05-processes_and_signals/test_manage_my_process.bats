@@ -81,7 +81,7 @@ feedback_msg()
 	[[ $output = $(feedback_msg 'restarted') ]]
 	[[ -e $PIDFILE ]]
 	[[ -s $PIDFILE ]]
-	# It should be modified since last time read(head command above)
+	# It should show up as modified since last time read(head command above)
 	[[ -N $PIDFILE ]]
 	# Compare the new PID with the last
 	NEWPID=$(head -1 "$PIDFILE")
