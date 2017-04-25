@@ -46,6 +46,8 @@ EOF
 
 wait_pid()
 {
+	# If $1 is not set(parameter not given) it waits for pid file creation
+	# When parameter is given it waits for pid file removal
 	[[ -z ${1+x} ]] && TEST="[ -e $PIDFILE ]" || TEST="[ ! -e $PIDFILE ]"
 	until $TEST; do :; done
 }
