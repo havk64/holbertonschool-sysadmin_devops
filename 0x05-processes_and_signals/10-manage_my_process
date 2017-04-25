@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Management of process/daemons with start, stop restart
 
-MY_PROCESS='manage_my_process'
+DAEMON='manage_my_process'
 PIDFILE='/var/run/my_process.pid'
 
 usage()
 {
-	printf '%s\n' "Usage: ${MY_PROCESS} {start|stop|restart}"
+	printf '%s\n' "Usage: ${DAEMON} {start|stop|restart}"
 	exit 1
 }
 
@@ -16,7 +16,7 @@ then
 fi
 
 # Create the file to be managed(if the file doesn't exist), make it executable
-[[ -e "$MY_PROCESS" ]] || (cat <<\EOF > "$MY_PROCESS" && chmod +x $MY_PROCESS)
+[[ -e "$DAEMON" ]] || (cat <<\EOF > "$DAEMON" && chmod +x $DAEMON)
 #!/usr/bin/env bash
 # This script is the "worker" to be managed
 
@@ -44,7 +44,7 @@ init()
 init
 EOF
 
-wait_pid()
+wait_pidfile()
 {
 	# If $1 is not set(parameter not given) it waits for pid file creation
 	# When parameter is given it waits for pid file removal
@@ -54,22 +54,22 @@ wait_pid()
 
 start()
 {
-	./$MY_PROCESS > /dev/null 2>&1 &
-	wait_pid
-	echo "$MY_PROCESS $1"
+	./$DAEMON > /dev/null 2>&1 &
+	wait_pidfile
+	echo "$DAEMON $1"
 }
 
 stop()
 {
-	pkill -fx "bash ./$MY_PROCESS"
-	wait_pid 1
-	echo "$MY_PROCESS stopped"
+	pkill -fx "bash ./$DAEMON"
+	wait_pidfile 1
+	echo "$DAEMON stopped"
 }
 
 restart()
 {
-	pkill -fx "bash ./$MY_PROCESS"
-	wait_pid 1
+	pkill -fx "bash ./$DAEMON"
+	wait_pidfile 1
 	start "restarted"
 }
 
