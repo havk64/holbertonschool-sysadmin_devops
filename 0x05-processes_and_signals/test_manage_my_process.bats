@@ -1,8 +1,12 @@
 #!/usr/bin/env bats
 # Unit tests for task 10, process management
 
-EXECFILE='./10-manage_my_process'
+INIT='./10-manage_my_process'
+PIDFILE='/var/run/my_process.pid'
+TMPFILE='/tmp/my_process'
 USAGE="Usage: manage_my_process {start|stop|restart}"
+
+teardown() { run "$INIT" stop; }
 
 feedback_msg()
 {
@@ -10,40 +14,44 @@ feedback_msg()
 }
 
 @test "Show usage when no parameter is given" {
-	run "$EXECFILE"
+	run "$INIT"
 	[ "$status" -eq 1 ]
 	[ "$output" = "$USAGE" ]
 }
 
 @test "Show usage when # of parameter is greater than 1 or invalid" {
-	run "$EXECFILE" start stop
+	[[ -z "${PID+x}" ]]
+	run "$INIT" start stop
 	[ "$status" -eq 1 ]
 	[ "$output" = "$USAGE" ]
-	run "$EXECFILE" waaaat?
+	run "$INIT" waaaat?
 	[ "$status" -eq 1 ]
 	[ "$output" = "$USAGE" ]
-	run "$EXECFILE" startt
+	run "$INIT" startt
 	[ "$status" -eq 1 ]
 	[ "$output" = "$USAGE" ]
 }
 
 @test "Starts and prints friendly msg" {
-	run "$EXECFILE" start
+	run "$INIT" start
 	[ "$status" -eq 0 ]
 	[ "$output" = "$(feedback_msg 'started')" ]
-}
-
-@test "Creates the PID file" {
 	[ -e "$PIDFILE" ]
+	[ -s "$PIDFILE" ]
+	PID=$(head -1 "$PIDFILE")
+	ps aux | grep -q "[^]]$PID"
+	[[ $? ]]
 }
 
-
-@test "$TMPFILE was create" {
+@test "$TMPFILE was create and string is being added" {
 	[ -e "$TMPFILE" ]
+	run grep -q '^I am alive!$' "$TMPFILE"
+	[ "$status" -eq 0 ]
 }
 
-@test "Stops when argument stop is given" {
-	run "$EXECFILE" stop
+@test "Stops when stop argument is given and deletes PIDFILE" {
+	run "$INIT" stop
 	[ "$status" -eq 0 ]
 	[ "$output" = "$(feedback_msg 'stopped')" ]
+	[[ ! -e $PIDFILE ]]
 }
