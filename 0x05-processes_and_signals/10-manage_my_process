@@ -2,6 +2,7 @@
 # Management of process/daemons with start, stop restart
 
 MY_PROCESS='manage_my_process'
+PIDFILE='/var/run/my_process.pid'
 
 usage()
 {
@@ -43,23 +44,30 @@ init()
 init
 EOF
 
+wait_pid()
+{
+	[[ -z ${1+x} ]] && TEST="[ -e $PIDFILE ]" || TEST="[ ! -e $PIDFILE ]"
+	until $TEST; do :; done
+}
 
 start()
 {
 	./$MY_PROCESS > /dev/null 2>&1 &
+	wait_pid
 	echo "$MY_PROCESS $1"
 }
 
 stop()
 {
 	pkill -fx "bash ./$MY_PROCESS"
+	wait_pid 1
 	echo "$MY_PROCESS stopped"
 }
 
 restart()
 {
 	pkill -fx "bash ./$MY_PROCESS"
-	sleep 2
+	wait_pid 1
 	start "restarted"
 }
 
