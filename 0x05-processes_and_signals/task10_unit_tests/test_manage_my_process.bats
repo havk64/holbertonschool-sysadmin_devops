@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # Unit tests for task 10, process management
 
-INIT='./10-manage_my_process'
+INIT='../10-manage_my_process'
 PIDFILE='/var/run/my_process.pid'
 TMPFILE='/tmp/my_process'
 USAGE="Usage: manage_my_process {start|stop|restart}"
