@@ -17,20 +17,20 @@ fi
 
 # Create the file to be managed(if the file doesn't exist), make it executable
 [[ -e "$DAEMON" ]] || (cat <<\EOF > "$DAEMON" && chmod +x $DAEMON)
-#!/usr/bin/env bash
+#!/bin/sh
 # This script is the "worker" to be managed
 
 PID=$$
 PIDFILE='/var/run/my_process.pid'
 echo "$PID" | sudo tee "$PIDFILE" > /dev/null
 
-remove()
+cleanup()
 {
 	sudo rm -f $PIDFILE
 	exit 0
 }
 
-trap remove SIGTERM
+trap cleanup 15
 
 init()
 {
@@ -54,21 +54,21 @@ wait_pidfile()
 
 start()
 {
-	./$DAEMON > /dev/null 2>&1 &
+	sh $DAEMON > /dev/null 2>&1 &
 	wait_pidfile
 	echo "$DAEMON $1"
 }
 
 stop()
 {
-	pkill -fx "bash ./$DAEMON"
+	pkill -fx "sh $DAEMON"
 	wait_pidfile 1
 	echo "$DAEMON stopped"
 }
 
 restart()
 {
-	pkill -fx "bash ./$DAEMON"
+	pkill -fx "sh $DAEMON"
 	wait_pidfile 1
 	start "restarted"
 }
