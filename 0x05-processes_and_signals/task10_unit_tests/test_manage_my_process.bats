@@ -60,7 +60,7 @@ feedback_msg()
 	[[ -e $PIDFILE ]]
 	[[ -s $PIDFILE ]]
 	# The process id should be the same for the file and process
-	PID=$(head -1 "$PIDFILE")
+	let "PID = $(head -1 "$PIDFILE")"
 	ps aux | grep -q "[^]]$PID"
 	[[ $? ]]
 }
@@ -88,7 +88,7 @@ feedback_msg()
 	# Start the process before test the restart function
 	run "$INIT" start
 	# Get the PID before restart
-	PID=$(head -1 "$PIDFILE")
+	let "PID = $(head -1 "$PIDFILE")"
 	# Check that the PID file was created
 	[[ -e $PIDFILE ]]
 	[[ -s $PIDFILE ]]
@@ -101,6 +101,6 @@ feedback_msg()
 	# It should show up as modified since last time read(head command above)
 	[[ -N $PIDFILE ]]
 	# Compare the new PID with the last
-	NEWPID=$(head -1 "$PIDFILE")
+	let "NEWPID = $(head -1 "$PIDFILE")"
 	[[ $PID != $NEWPID ]]
 }
