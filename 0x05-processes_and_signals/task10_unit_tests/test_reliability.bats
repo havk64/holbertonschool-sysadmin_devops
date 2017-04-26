@@ -7,7 +7,7 @@ DAEMON='manage_my_process'
 PIDFILE='/var/run/my_process.pid'
 
 teardown() {
-  dbg_save_source './bats-test.src'
+  dbg_save_source './reliability-test.src'
 }
 
 # Save a copy of the preprocessed test file.
@@ -15,7 +15,7 @@ teardown() {
 # Globals:
 #   BATS_TEST_SOURCE
 # Arguments:
-#   $1 - [=./bats.$$.src] destination file/directory
+#   $1 - [=./reliability.$$.src] destination file/directory
 # Returns:
 #   none
 dbg_save_source() {
