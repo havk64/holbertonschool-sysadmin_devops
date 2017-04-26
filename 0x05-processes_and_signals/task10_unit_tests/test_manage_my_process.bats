@@ -7,7 +7,23 @@ PIDFILE='/var/run/my_process.pid'
 TMPFILE='/tmp/my_process'
 USAGE="Usage: $DAEMON {start|stop|restart}"
 
-teardown() { run "$INIT" stop; }
+teardown() {
+	run "$INIT" stop
+	dbg_save_source "./$DAEMON-test.src"
+}
+
+# Save a copy of the preprocessed test file.
+#
+# Globals:
+#   BATS_TEST_SOURCE
+# Arguments:
+#   $1 - [=./$DAEMON.$$.src] destination file/directory
+# Returns:
+#   none
+dbg_save_source() {
+	local -r dest="${1:-.}"
+	cp --reflink=auto "$BATS_TEST_SOURCE" "$dest"
+}
 
 feedback_msg()
 {
