@@ -70,16 +70,14 @@ stop()
 	[[ $(pgrep -fxc "bash $DAEMON") -lt 1 ]] && echo "$DAEMON not running" &&
 		exit 0
 
-	pkill -F "$PIDFILE"
-	wait_pidfile 1
-	echo "$DAEMON stopped"
+	[[ -f $PIDFILE ]] && pkill -F "$PIDFILE" && wait_pidfile 1 &&
+		echo "$DAEMON stopped"
 }
 
 restart()
 {
-	pkill -fx "bash $DAEMON"
-	wait_pidfile 1
-	start "restarted"
+	[[ -f $PIDFILE ]] && pkill -F "$PIDFILE" && wait_pidfile 1 &&
+		start "restarted"
 }
 
 case "$1" in
