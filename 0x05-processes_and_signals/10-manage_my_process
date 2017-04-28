@@ -61,7 +61,7 @@ start()
 		exit 0
 
 	bash $DAEMON &> /dev/null &
-	wait_pidfile
+	[[ $? ]] && wait_pidfile  && echo "Failed!"
 	echo "$DAEMON $1"
 }
 
