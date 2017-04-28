@@ -55,10 +55,10 @@ wait_pidfile()
 
 start()
 {
-	if pgrep -fx "bash $DAEMON" &> '/dev/null'; then
-		echo "$DAEMON already started" && exit 0
-	fi
-	bash $DAEMON > /dev/null 2>&1 &
+	[[ $(pgrep -fxc "bash $DAEMON") -gt 0 ]] && echo "$DAEMON already started" &&
+		exit 0
+
+	bash $DAEMON &> /dev/null &
 	wait_pidfile
 	echo "$DAEMON $1"
 }
