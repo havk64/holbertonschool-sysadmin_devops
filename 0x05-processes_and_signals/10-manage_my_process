@@ -27,7 +27,7 @@ echo "$PID" | sudo tee "$PIDFILE" > /dev/null
 
 cleanup()
 {
-	sudo rm -f "$PIDFILE" "$TMPFILE"
+	sudo rm -f "$PIDFILE"
 	exit 0
 }
 
@@ -55,6 +55,8 @@ wait_pidfile()
 
 start()
 {
+	# If the process is already running prints msg and exit
+	# Otherwise starts it.
 	[[ $(pgrep -fxc "bash $DAEMON") -gt 0 ]] && echo "$DAEMON already started" &&
 		exit 0
 
