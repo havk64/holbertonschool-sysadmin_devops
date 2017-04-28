@@ -16,17 +16,18 @@ then
 fi
 
 # Create the file to be managed(if the file doesn't exist), make it executable
-[[ -e "$DAEMON" ]] || (cat <<\EOF > "$DAEMON" && chmod +x $DAEMON)
-#!/bin/sh
+[[ -e "$DAEMON" ]] || (cat <<\EOF > "$DAEMON" && chmod +x "$DAEMON")
+#!/bin/bash
 # This script is the "worker" to be managed
 
 PID=$$
 PIDFILE='/var/run/my_process.pid'
+TMPFILE=/tmp/my_process
 echo "$PID" | sudo tee "$PIDFILE" > /dev/null
 
 cleanup()
 {
-	sudo rm -f $PIDFILE
+	sudo rm -f "$PIDFILE" "$TMPFILE"
 	exit 0
 }
 
@@ -36,7 +37,7 @@ init()
 {
 	while :
 	do
-		echo 'I am alive!' >> /tmp/my_process
+		echo 'I am alive!' >> "$TMPFILE"
 		sleep 2
 	done
 }
@@ -54,21 +55,21 @@ wait_pidfile()
 
 start()
 {
-	sh $DAEMON > /dev/null 2>&1 &
+	bash $DAEMON > /dev/null 2>&1 &
 	wait_pidfile
 	echo "$DAEMON $1"
 }
 
 stop()
 {
-	pkill -fx "sh $DAEMON"
+	pkill -fx "bash $DAEMON"
 	wait_pidfile 1
 	echo "$DAEMON stopped"
 }
 
 restart()
 {
-	pkill -fx "sh $DAEMON"
+	pkill -fx "bash $DAEMON"
 	wait_pidfile 1
 	start "restarted"
 }
@@ -87,3 +88,5 @@ case "$1" in
 		usage
 		;;
 esac
+
+exit
