@@ -76,8 +76,8 @@ stop()
 
 restart()
 {
-	[[ -f $PIDFILE ]] && pkill -F "$PIDFILE" && wait_pidfile 1 &&
-		start "restarted"
+	[[ -f $PIDFILE ]] && pkill -F "$PIDFILE" && wait_pidfile 1
+	start "restarted"
 }
 
 case "$1" in
