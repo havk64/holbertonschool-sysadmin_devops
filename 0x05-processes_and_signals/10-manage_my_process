@@ -67,7 +67,10 @@ start()
 
 stop()
 {
-	pkill -fx "bash $DAEMON"
+	[[ $(pgrep -fxc "bash $DAEMON") -lt 1 ]] && echo "$DAEMON not running" &&
+		exit 0
+
+	pkill -F "$PIDFILE"
 	wait_pidfile 1
 	echo "$DAEMON stopped"
 }
