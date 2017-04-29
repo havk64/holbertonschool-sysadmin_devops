@@ -10,7 +10,6 @@ terminate()
 {
 	echo "Finishing..."
 	echo
-	kill "$watchPID"
 	cat  "$TMPFILE"
 	rm -f "$TMPFILE"
 	exit 0
@@ -41,8 +40,8 @@ checkDir()
 initMonitor() {
 	[[ ! -e $1 ]] && echo "Waiting for file $(pwd)/$1"
 	format=$(checkDir "$1")
-	inotifywatch -v "$1" &> "$TMPFILE" &
-	watchPID="$!"
+	# Add monitor to show statistics at the end of script(hooked by trap statement)
+	inotifywatch -v --exclude 'utmp' "$1" &> "$TMPFILE" &
 	while read -r change; do
 		echo "$change"
 	done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
