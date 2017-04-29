@@ -7,13 +7,13 @@ EXEC='/usr/bin/inotifywait'
 
 usage()
 {
-	printf '%s\n' "Usage: $(basename "$0") [ start|stop ] {filename|directory}"
+	printf '%s\n' "Usage: $(basename "$0") {filename|directory}"
 	exit 1
 }
 
 checkDir()
 {
-	# Case the file to be monitored doesn't exist, waits for its creation
+	# Case the file to be monitored doesn't exist yet, waits for its creation
 	while [[ ! -e $1 ]]; do sleep 0.5; done
 	# Default format for directories
 	local format='%T: %f %:e'
@@ -22,8 +22,8 @@ checkDir()
 	echo "$format"
 }
 
-# Case the number of arguments is less then one or greater then 2, prints usage
-[[ $# -lt 1 ]] || [[ $# -gt 2 ]] && usage
+# Case the number of arguments is not 1, prints usage
+[[ $# -ne 1 ]] && usage
 
 initMonitor() {
 	echo "Waiting for file $(pwd)/$1"
@@ -33,20 +33,7 @@ initMonitor() {
 	 done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
 }
 
-stopMonitor() {
-	pkill -f "${EXEC:9}"
-}
+DIR="${1:-.}"
+initMonitor "$DIR"
 
-case "$1" in
-	start)
-		# Case second positional arg isn't given defaults to current dir
-		DIR=${2-.}
-		initMonitor "$DIR"
-		;;
-	stop)
-		stopMonitor
-		;;
-	*)
-		usage
-esac
 exit
