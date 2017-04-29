@@ -60,7 +60,7 @@ test_Starts_and_prints_friendly_msg() { bats_test_begin "Starts and prints frien
 	[[ -e $PIDFILE ]]
 	[[ -s $PIDFILE ]]
 	# The process id should be the same for the file and process
-	PID=$(head -1 "$PIDFILE")
+	let "PID = $(head -1 "$PIDFILE")"
 	ps aux | grep -q "[^]]$PID"
 	[[ $? ]]
 }
@@ -73,7 +73,24 @@ test__was_create_and_string_is_being_added() { bats_test_begin "$TMPFILE was cre
 	[[ $status -eq 0 ]]
 }
 
-test_Stops_when_stop_argument_is_given_and_deletes_PIDFILE() { bats_test_begin "Stops when stop argument is given and deletes PIDFILE" 76; 
+test_Warn_when_the_process_is_already_running() { bats_test_begin "Warn when the process is already running" 76; 
+	run "$INIT" start
+	[[ $status -eq 0 ]]
+	[[ $output = $(feedback_msg 'started') ]]
+	run "$INIT" start
+	[[ $status -eq 0 ]]
+	[[ $output = $(feedback_msg 'already started') ]]
+}
+
+test_If_there-27s_no_process_running_stop_emit_a_warn_msg() { bats_test_begin "If there's no process running stop emit a warn msg" 85; 
+	run "$INIT" stop
+	[[ $status -eq 0 ]]
+	[[ $output == $(feedback_msg 'not running') ]]
+}
+
+test_Stops_when_stop_argument_is_given_and_deletes_PIDFILE() { bats_test_begin "Stops when stop argument is given and deletes PIDFILE" 91; 
+	run "$INIT" start
+	[[ $status -eq 0 ]]
 	run "$INIT" stop
 	[[ $status -eq 0 ]]
 	# It should output the stop message
@@ -82,13 +99,13 @@ test_Stops_when_stop_argument_is_given_and_deletes_PIDFILE() { bats_test_begin "
 	[[ ! -e $PIDFILE ]]
 }
 
-test_Restarts_when_restart_argument_is_given() { bats_test_begin "Restarts when restart argument is given" 85; 
+test_Restarts_when_restart_argument_is_given() { bats_test_begin "Restarts when restart argument is given" 102; 
 	# After each test the process should stop and remove pid file(teardown)
 	[[ ! -e $PIDFILE ]]
 	# Start the process before test the restart function
 	run "$INIT" start
 	# Get the PID before restart
-	PID=$(head -1 "$PIDFILE")
+	let "PID = $(head -1 "$PIDFILE")"
 	# Check that the PID file was created
 	[[ -e $PIDFILE ]]
 	[[ -s $PIDFILE ]]
@@ -101,7 +118,7 @@ test_Restarts_when_restart_argument_is_given() { bats_test_begin "Restarts when 
 	# It should show up as modified since last time read(head command above)
 	[[ -N $PIDFILE ]]
 	# Compare the new PID with the last
-	NEWPID=$(head -1 "$PIDFILE")
+	let "NEWPID = $(head -1 "$PIDFILE")"
 	[[ $PID != $NEWPID ]]
 }
 
@@ -109,5 +126,7 @@ bats_test_function test_Show_usage_when_no_parameter_is_given
 bats_test_function test_Show_usage_when_-23_of_parameter_is_greater_than_1_or_invalid
 bats_test_function test_Starts_and_prints_friendly_msg
 bats_test_function test__was_create_and_string_is_being_added
+bats_test_function test_Warn_when_the_process_is_already_running
+bats_test_function test_If_there-27s_no_process_running_stop_emit_a_warn_msg
 bats_test_function test_Stops_when_stop_argument_is_given_and_deletes_PIDFILE
 bats_test_function test_Restarts_when_restart_argument_is_given

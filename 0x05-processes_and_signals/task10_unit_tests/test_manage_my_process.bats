@@ -73,7 +73,24 @@ feedback_msg()
 	[[ $status -eq 0 ]]
 }
 
+@test "Warn when the process is already running" {
+	run "$INIT" start
+	[[ $status -eq 0 ]]
+	[[ $output = $(feedback_msg 'started') ]]
+	run "$INIT" start
+	[[ $status -eq 0 ]]
+	[[ $output = $(feedback_msg 'already started') ]]
+}
+
+@test "If there's no process running stop emit a warn msg" {
+	run "$INIT" stop
+	[[ $status -eq 0 ]]
+	[[ $output == $(feedback_msg 'not running') ]]
+}
+
 @test "Stops when stop argument is given and deletes PIDFILE" {
+	run "$INIT" start
+	[[ $status -eq 0 ]]
 	run "$INIT" stop
 	[[ $status -eq 0 ]]
 	# It should output the stop message
