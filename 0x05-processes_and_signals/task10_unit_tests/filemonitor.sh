@@ -22,15 +22,15 @@ checkDir()
 	echo "$format"
 }
 
-
 # Case the number of arguments is less then one or greater then 2, prints usage
 [[ $# -lt 1 ]] || [[ $# -gt 2 ]] && usage
 
 initMonitor() {
 	echo "Waiting for file $(pwd)/$1"
 	format=$(checkDir "$1")
-	"$EXEC" -m --timefmt '%r' --format "$format" "$1" |
-	while read -r change; do echo "$change"; done | grep -v 'utmp'
+	 while read -r change; do
+		 echo "$change"
+	 done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
 }
 
 stopMonitor() {
