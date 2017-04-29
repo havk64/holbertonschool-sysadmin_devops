@@ -4,6 +4,19 @@
 # The output goes to stdout
 
 EXEC='/usr/bin/inotifywait'
+TMPFILE='/tmp/statistics'
+
+terminate()
+{
+	echo "Finishing..."
+	echo
+	kill "$watchPID"
+	cat  "$TMPFILE"
+	rm -f "$TMPFILE"
+	exit 0
+}
+
+trap terminate SIGTERM SIGINT
 
 usage()
 {
@@ -28,11 +41,14 @@ checkDir()
 initMonitor() {
 	[[ ! -e $1 ]] && echo "Waiting for file $(pwd)/$1"
 	format=$(checkDir "$1")
+	inotifywatch -v "$1" &> "$TMPFILE" &
+	watchPID="$!"
 	while read -r change; do
 		echo "$change"
 	done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
 }
 
+# If $1 is not define or empty use current dir
 DIR="${1:-.}"
 initMonitor "$DIR"
 
