@@ -14,7 +14,6 @@ usage()
 checkDir()
 {
 	# Case the file to be monitored doesn't exist yet, waits for its creation
-	[[ ! -e $1 ]] && echo "Waiting for file $(pwd)/$1"
 	while [[ ! -e $1 ]]; do sleep 0.5; done
 	# Default format for directories
 	local format='%T: %f %:e'
@@ -27,10 +26,11 @@ checkDir()
 [[ $# -ne 1 ]] && usage
 
 initMonitor() {
+	[[ ! -e $1 ]] && echo "Waiting for file $(pwd)/$1"
 	format=$(checkDir "$1")
-	 while read -r change; do
-		 echo "$change"
-	 done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
+	while read -r change; do
+		echo "$change"
+	done < <("$EXEC" -m --timefmt '%r' --format "$format" --exclude 'utmp' "$1")
 }
 
 DIR="${1:-.}"
